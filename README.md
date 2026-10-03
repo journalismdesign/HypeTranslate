@@ -7,11 +7,12 @@ Adaptation en français, aux couleurs de Synth, du cours en ligne
 
 ```
 index.html                    squelette de la page (aucun texte éditorial)
-css/style.css                 habillage ; couleurs et polices en variables en tête de fichier
+css/style.css                 habillage, construit sur les jetons du design system Synth.
+css/synth/                    jetons copiés du design system « Synth. » (Claude Design) + @font-face
 js/markdown.js                mini-convertisseur Markdown, sans dépendance
 js/app.js                     découpage en modules, navigation, exercices, progression
 contenu/hype-literacy.fr.md   TOUS les textes du parcours
-assets/logo-synth.svg         logo (provisoire, à remplacer)
+assets/                       logos Synth., œil, motif diamant, polices (Coolvetica, IBM Plex Mono)
 ```
 
 ## Modifier les textes
@@ -33,10 +34,12 @@ puis ouvrir <http://localhost:8000>. Le site peut aussi être publié tel quel
 
 ## À faire avant publication
 
-- **Logo** : `assets/logo-synth.svg` est un logo provisoire. Le remplacer par le
-  fichier officiel en gardant le même nom.
-- **Couleurs** : les variables `--synth-*` de `css/style.css` sont provisoires.
-  Les caler sur la charte de Synth.
+- **Charte** : logos, polices, couleurs (accent `#00FFE0`), espacements et effets viennent
+  du design system « Synth. » de Claude Design. Thème sombre par défaut, thème clair
+  au choix du lecteur. Pour suivre une évolution de la charte, recopier ses fichiers
+  `project/tokens/*.css` dans `css/synth/`.
+- **Licence des polices** : vérifier que la licence de Coolvetica (Typodermic) couvre
+  l'intégration web avant de publier. IBM Plex Mono est sous licence libre (OFL).
 - **Textes** : il s'agit d'une adaptation libre rédigée d'après la présentation
   publique du cours, pas d'une traduction du texte original (inaccessible lors de la
   rédaction). À relire et à confronter au cours de la DW Akademie, notamment pour

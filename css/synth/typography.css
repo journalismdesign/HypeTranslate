@@ -1,0 +1,54 @@
+/* Copie de project/tokens/ du design system « Synth. » (Claude Design). Ne pas modifier ici : resynchroniser depuis la source. */
+:root{
+/* --- Families --- */
+--font-display:"Coolvetica","Coolvetica Condensed","Helvetica Neue",Helvetica,sans-serif;
+--font-display-condensed:"Coolvetica Condensed","Coolvetica","Helvetica Neue",sans-serif;
+--font-display-crammed:"Coolvetica Crammed","Coolvetica Condensed",sans-serif;
+--font-display-compressed:"Coolvetica Compressed","Coolvetica Crammed",sans-serif;
+--font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+--font-body:var(--font-mono);
+
+/* --- Sizes (display: Coolvetica) --- */
+--display-xxl:104px;
+--display-xl:76px;
+--display-lg:56px;
+--display-md:40px;
+--display-sm:30px;
+
+/* --- Sizes (text: IBM Plex Mono) --- */
+--text-xl:22px;
+--text-lg:18px;
+--text-md:16px;
+--text-sm:14px;
+--text-xs:12px;
+--text-xxs:10px;
+
+/* --- Line heights --- */
+--lh-display:0.94;/* @kind other */
+--lh-display-loose:1.06;/* @kind other */
+--lh-tight:1.25;/* @kind other */
+--lh-body:1.6;/* @kind other */
+--lh-loose:1.8;/* @kind other */
+
+/* --- Tracking --- */
+--track-display:-0.02em;/* @kind other */
+--track-display-tight:-0.035em;/* @kind other */
+--track-body:0;/* @kind other */
+--track-label:0.08em;/* @kind other */
+--track-eyebrow:0.16em;/* @kind other */
+
+/* --- Weights --- */
+--weight-regular:400;/* @kind other */
+--weight-bold:700;/* @kind other */
+--weight-heavy:800;/* @kind other */
+
+/* --- Semantic roles --- */
+--type-hero-family:var(--font-display);
+--type-hero-size:var(--display-xl);
+--type-heading-family:var(--font-display);
+--type-body-family:var(--font-mono);
+--type-body-size:var(--text-md);
+--type-eyebrow-family:var(--font-mono);
+--type-eyebrow-size:var(--text-xs);
+--type-code-family:var(--font-mono);
+}

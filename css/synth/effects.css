@@ -1,0 +1,29 @@
+/* Copie de project/tokens/ du design system « Synth. » (Claude Design). Ne pas modifier ici : resynchroniser depuis la source. */
+/* Seul écart : --texture-diamond pointe vers une bande du motif sans le logo (assets/texture-diamant.jpg). */
+:root{
+/* Radii — the brand is orthogonal; corners stay square or barely rounded */
+--radius-0:0px;
+--radius-1:2px;
+--radius-2:4px;
+--radius-pill:999px;
+
+/* Borders */
+--border-w:1px;/* @kind other */
+--border-w-strong:2px;/* @kind other */
+
+/* Shadows — dark UI leans on glow + hairlines, not drop shadow */
+--shadow-none:none;
+--shadow-lift:0 8px 24px rgba(0,0,0,.6);
+--shadow-modal:0 24px 64px rgba(0,0,0,.75);
+--glow-cyan:0 0 0 1px var(--cyan-a40),0 0 24px rgba(0,255,224,.18);
+--glow-cyan-strong:0 0 0 1px var(--synth-cyan),0 0 32px rgba(0,255,224,.35);
+--focus-ring:0 0 0 2px var(--black),0 0 0 4px var(--synth-cyan);
+
+/* Textures & fills */
+--texture-diamond:url("../../assets/texture-diamant.jpg");/* @kind other */
+--pattern-diamond-size:96px;/* @kind other */
+--scrim-bottom:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(0,0,0,.85) 70%,#000 100%);/* @kind other */
+--scrim-top:linear-gradient(180deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,0) 100%);/* @kind other */
+--blur-glass:blur(12px);/* @kind other */
+--glass-fill:rgba(10,10,10,.72);/* @kind other */
+}

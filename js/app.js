@@ -213,8 +213,12 @@
     var prev = modules[index - 1];
     var next = modules[index + 1];
 
-    var html = '<article class="module module-' + mod.id + '">' +
-      MiniMarkdown.render(mod.body, handlers);
+    var body = MiniMarkdown.render(mod.body, handlers);
+    if (mod.id === 'accueil') {
+      // Titre et sous-titre de l'accueil sur le bandeau à motif de la charte
+      body = body.replace(/^(<h1[\s\S]*?<\/h1>\s*(?:<h2[\s\S]*?<\/h2>)?)/, '<header class="hero">$1</header>');
+    }
+    var html = '<article class="module module-' + mod.id + '">' + body;
 
     if (mod.id === 'accueil' && next) {
       html += '<p class="cta"><a class="button" href="#/' + next.id + '">Commencer le parcours →</a></p>';
@@ -267,15 +271,19 @@
     menuToggle.setAttribute('aria-expanded', String(open));
   });
 
+  // Sombre par défaut (charte Synth) ; le thème clair est un choix mémorisé.
   var themeToggle = document.querySelector('.theme-toggle');
-  if (state.theme) document.documentElement.dataset.theme = state.theme;
+  function applyTheme() {
+    var light = state.theme === 'light';
+    if (light) document.documentElement.dataset.theme = 'light';
+    else delete document.documentElement.dataset.theme;
+    themeToggle.setAttribute('aria-label', light ? 'Passer en thème sombre' : 'Passer en thème clair');
+  }
+  applyTheme();
   themeToggle.addEventListener('click', function () {
-    var dark = document.documentElement.dataset.theme
-      ? document.documentElement.dataset.theme === 'dark'
-      : window.matchMedia('(prefers-color-scheme: dark)').matches;
-    state.theme = dark ? 'light' : 'dark';
-    document.documentElement.dataset.theme = state.theme;
+    state.theme = state.theme === 'light' ? 'dark' : 'light';
     saveState();
+    applyTheme();
   });
 
   document.querySelector('.reset').addEventListener('click', function () {

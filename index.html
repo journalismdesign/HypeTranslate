@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Littératie du hype — Synth</title>
   <meta name="description" content="Parcours en français pour couvrir l'intelligence artificielle sans amplifier le hype. Adaptation Synth du cours Hype Literacy de la DW Akademie.">
-  <link rel="icon" href="assets/logo-synth.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="assets/mark-eye-cyan.png" type="image/png">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -21,11 +19,14 @@
     </button>
     <a class="brand" href="#/accueil" aria-label="Synth — accueil du parcours">
       <span class="brand-logo">
-        <img src="assets/logo-synth.svg" alt="Synth" height="32">
+        <img class="logo-dark" src="assets/logo-synth-white-cyan.png" alt="Synth." height="30">
+        <img class="logo-light" src="assets/logo-synth-black.png" alt="Synth." height="30">
       </span>
       <span class="brand-title">Littératie du hype</span>
     </a>
-    <button class="theme-toggle" type="button" aria-label="Changer de thème">◐</button>
+    <button class="theme-toggle" type="button" aria-label="Passer en thème clair">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>
+    </button>
     <div class="progress" role="progressbar" aria-label="Progression du parcours" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
       <span class="progress-bar"></span>
     </div>
@@ -43,7 +44,9 @@
   </div>
 
   <footer class="footer">
-    <p>Une adaptation <strong>Synth</strong> d'après le cours <em>Hype Literacy</em> de la DW Akademie et de Hype Studies.</p>
+    <p class="footer-tagline">Clarifier les enjeux du présent technologique</p>
+    <p>Une adaptation <strong>Synth.</strong> d'après le cours <em>Hype Literacy</em> de la DW Akademie et de Hype Studies.</p>
+    <img class="footer-mark" src="assets/mark-eye-cyan.png" alt="" aria-hidden="true">
   </footer>
 
   <script src="js/markdown.js"></script>
