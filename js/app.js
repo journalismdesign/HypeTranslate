@@ -57,51 +57,160 @@
       }).join('') + '</div>';
     },
 
-    quiz: function (src, md) {
-      var blocks = src.split(/\n\s*\n/).filter(function (b) { return b.trim(); });
-      return blocks.map(function (block) {
-        var id = uid('q');
-        var question = '';
-        var answers = [];
-        var explanation = [];
-        block.split('\n').forEach(function (line) {
-          var m;
-          if ((m = line.match(/^Q:\s*(.*)$/))) question = m[1];
-          else if ((m = line.match(/^-\s*\[([ xX])\]\s*(.*)$/))) answers.push({ ok: m[1] !== ' ', text: m[2] });
-          else if ((m = line.match(/^>\s?(.*)$/))) explanation.push(m[1]);
-        });
-        return '<fieldset class="quiz" id="' + id + '">' +
-          '<legend><span class="tag">Quiz</span>' + md.inline(question) + '</legend>' +
-          '<div class="answers">' + answers.map(function (a) {
-            return '<button type="button" class="answer" data-ok="' + a.ok + '">' + md.inline(a.text) + '</button>';
-          }).join('') + '</div>' +
-          '<p class="feedback" aria-live="polite" hidden></p>' +
-          '<p class="explanation" hidden>' + md.inline(explanation.join(' ')) + '</p>' +
-          '</fieldset>';
-      }).join('');
+    section: function (src) {
+      var n = parseInt(src, 10) || 0;
+      return '<div class="section-num" aria-hidden="true"><span>' + (n < 10 ? '0' : '') + n + '</span></div>';
     },
 
-    hypemetre: function (src, md) {
-      var labels = ['Factuel', 'Léger', 'Marqué', 'Hype pur'];
-      var rows = src.split('\n').filter(Boolean).map(function (line) {
-        var parts = line.split('::').map(function (s) { return s.trim(); });
-        return { title: parts[0], score: parseInt(parts[1], 10) || 0, note: parts[2] || '' };
+    note: function (src, md) {
+      return '<aside class="note">' + md.render(src) + '</aside>';
+    },
+
+    image: function (src, md) {
+      return parseFigures(src).map(function (f) { return figure(f, md); }).join('');
+    },
+
+    galerie: function (src, md) {
+      return '<div class="gallery">' + parseFigures(src).map(function (f) { return figure(f, md); }).join('') + '</div>';
+    },
+
+    carrousel: function (src, md) {
+      var figs = parseFigures(src);
+      return '<div class="carousel" data-index="0">' +
+        '<div class="carousel-track">' + figs.map(function (f, i) {
+          return '<div class="carousel-slide"' + (i ? ' hidden' : '') + '>' + figure(f, md) + '</div>';
+        }).join('') + '</div>' +
+        '<div class="carousel-nav">' +
+        '<button type="button" class="carousel-prev" aria-label="Image précédente">←</button>' +
+        '<span class="carousel-count" aria-live="polite">1 / ' + figs.length + '</span>' +
+        '<button type="button" class="carousel-next" aria-label="Image suivante">→</button>' +
+        '</div></div>';
+    },
+
+    video: function (src, md) {
+      var f = fields(src);
+      var id = (f.youtube || '').split('?')[0];
+      var start = ((f.youtube || '').match(/start=(\d+)/) || [])[1] || '';
+      // La vidéo ne se charge qu'au clic : aucune requête vers YouTube avant le consentement du lecteur.
+      return '<figure class="video" data-youtube="' + md.escape(id) + '" data-start="' + start + '">' +
+        '<button type="button" class="video-play">' +
+        '<span class="video-icon" aria-hidden="true">▶</span>' +
+        '<span class="video-title">' + md.inline(f.titre || 'Vidéo') + '</span>' +
+        '<span class="video-hint">Lire la vidéo — chargement depuis YouTube</span>' +
+        '</button>' +
+        (f.source ? '<figcaption><a href="' + md.escape(f.source) + '" target="_blank" rel="noopener">Voir sur YouTube</a></figcaption>' : '') +
+        '</figure>';
+    },
+
+    citation: function (src, md) {
+      var parts = src.split(/\n\s*\n/);
+      var f = fields(parts.shift());
+      return '<figure class="citation">' +
+        (f.portrait ? '<img class="citation-portrait" src="' + md.escape(f.portrait) + '" alt="" loading="lazy">' : '') +
+        '<blockquote class="citation-text">' + md.render(parts.join('\n\n')) + '</blockquote>' +
+        '<figcaption>' + md.inline(f.auteur || '') + '</figcaption>' +
+        '</figure>';
+    },
+
+    accordeon: function (src, md) {
+      var items = [];
+      src.split('\n').forEach(function (line) {
+        var m = line.match(/^\+\s+(.*)$/);
+        if (m) items.push({ title: m[1], body: [] });
+        else if (items.length) items[items.length - 1].body.push(line);
       });
-      return '<div class="hypemetre">' + rows.map(function (r) {
-        return '<div class="hm-item" data-score="' + r.score + '">' +
-          '<p class="hm-title">« ' + md.inline(r.title) + ' »</p>' +
-          '<div class="hm-scale" role="group" aria-label="Votre note de hype">' +
-          labels.map(function (label, n) {
-            return '<button type="button" class="hm-btn" data-value="' + n + '" title="' + label + '">' +
-              '<span class="hm-num">' + n + '</span><span class="hm-label">' + label + '</span></button>';
-          }).join('') +
-          '</div>' +
-          '<div class="hm-result" aria-live="polite" hidden>' +
-          '<p class="hm-verdict"></p><p>' + md.inline(r.note) + '</p></div>' +
-          '</div>';
+      return '<div class="accordion">' + items.map(function (it) {
+        return '<details><summary>' + md.inline(it.title) + '</summary>' +
+          '<div class="accordion-body">' + md.render(it.body.join('\n')) + '</div></details>';
       }).join('') + '</div>';
+    },
+
+    tri: function (src, md) {
+      var piles = [];
+      var items = [];
+      src.split('\n').filter(Boolean).forEach(function (line, p) {
+        var parts = line.split('::');
+        piles.push(parts[0].trim());
+        (parts[1] || '').split('|').forEach(function (w) {
+          if (w.trim()) items.push({ text: w.trim(), pile: p });
+        });
+      });
+      shuffle(items);
+      return '<div class="sorting">' +
+        '<p class="sorting-help">Choisissez une formule, puis la catégorie à laquelle elle appartient.</p>' +
+        '<div class="sorting-pool">' + items.map(function (it) {
+          return '<button type="button" class="sorting-item" data-pile="' + it.pile + '" aria-pressed="false">' + md.inline(it.text) + '</button>';
+        }).join('') + '</div>' +
+        '<div class="sorting-piles">' + piles.map(function (title, p) {
+          return '<div class="sorting-pile" data-pile="' + p + '">' +
+            '<button type="button" class="sorting-target">' + md.inline(title) + '</button>' +
+            '<div class="sorting-drop"></div></div>';
+        }).join('') + '</div>' +
+        '<p class="sorting-feedback" aria-live="polite"></p>' +
+        '<button type="button" class="sorting-reset">Recommencer</button>' +
+        '</div>';
+    },
+
+    'image-annotee': function (src, md) {
+      var lines = src.split('\n').filter(Boolean);
+      var img = fields(lines.shift()).image || '';
+      var points = lines.map(function (line) {
+        var parts = line.split('::');
+        var xy = parts[0].split(',');
+        return { x: parseFloat(xy[0]), y: parseFloat(xy[1]), title: (parts[1] || '').trim(), text: (parts[2] || '').trim() };
+      });
+      return '<div class="labeled">' +
+        '<div class="labeled-stage"><img src="' + md.escape(img) + '" alt="" loading="lazy">' +
+        points.map(function (pt, i) {
+          return '<button type="button" class="labeled-pin" style="left:' + pt.x + '%;top:' + pt.y + '%" ' +
+            'data-index="' + i + '" aria-pressed="false" aria-label="Repère ' + (i + 1) + '">' + (i + 1) + '</button>';
+        }).join('') + '</div>' +
+        '<div class="labeled-panels">' + points.map(function (pt, i) {
+          return '<div class="labeled-panel" data-index="' + i + '" hidden>' +
+            '<p class="labeled-num">Repère ' + (i + 1) + ' / ' + points.length + '</p>' +
+            '<p class="labeled-title">' + md.inline(pt.title) + '</p>' +
+            '<p>' + md.inline(pt.text) + '</p></div>';
+        }).join('') +
+        '<p class="labeled-empty">Cliquez sur un numéro de l’image pour afficher l’analyse.</p>' +
+        '</div></div>';
     }
   };
+
+  /* Utilitaires des blocs */
+
+  // « clé: valeur » sur une ligne chacune
+  function fields(text) {
+    var out = {};
+    (text || '').split('\n').forEach(function (line) {
+      var m = line.match(/^([\w-]+):\s*(.*)$/);
+      if (m) out[m[1]] = m[2].trim();
+    });
+    return out;
+  }
+
+  // « chemin :: légende » sur une ligne chacune
+  function parseFigures(src) {
+    return src.split('\n').filter(function (l) { return l.trim(); }).map(function (line) {
+      var k = line.indexOf('::');
+      return { src: (k < 0 ? line : line.slice(0, k)).trim(), caption: k < 0 ? '' : line.slice(k + 2).trim() };
+    });
+  }
+
+  function figure(f, md) {
+    return '<figure class="figure">' +
+      '<a class="figure-zoom" href="' + md.escape(f.src) + '" target="_blank" rel="noopener" aria-label="Agrandir l’image">' +
+      '<img src="' + md.escape(f.src) + '" alt="" loading="lazy"></a>' +
+      (f.caption ? '<figcaption>' + md.inline(f.caption) + '</figcaption>' : '') +
+      '</figure>';
+  }
+
+  function shuffle(list) {
+    for (var i = list.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = list[i]; list[i] = list[j]; list[j] = t;
+    }
+    return list;
+  }
 
   function bindInteractions(root, moduleId) {
     root.querySelectorAll('.card').forEach(function (card) {
@@ -111,42 +220,94 @@
       });
     });
 
-    root.querySelectorAll('.quiz').forEach(function (quiz) {
-      var feedback = quiz.querySelector('.feedback');
-      var explanation = quiz.querySelector('.explanation');
-      quiz.querySelectorAll('.answer').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var ok = btn.dataset.ok === 'true';
-          quiz.querySelectorAll('.answer').forEach(function (b) {
-            b.classList.remove('is-wrong');
-            if (b.dataset.ok === 'true' && ok) b.classList.add('is-right');
+    root.querySelectorAll('.carousel').forEach(function (car) {
+      var slides = car.querySelectorAll('.carousel-slide');
+      var count = car.querySelector('.carousel-count');
+      var index = 0;
+      function go(n) {
+        index = (n + slides.length) % slides.length;
+        slides.forEach(function (s, i) { s.hidden = i !== index; });
+        count.textContent = (index + 1) + ' / ' + slides.length;
+      }
+      car.querySelector('.carousel-prev').addEventListener('click', function () { go(index - 1); });
+      car.querySelector('.carousel-next').addEventListener('click', function () { go(index + 1); });
+    });
+
+    root.querySelectorAll('.video').forEach(function (fig) {
+      fig.querySelector('.video-play').addEventListener('click', function () {
+        var src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(fig.dataset.youtube) +
+          '?autoplay=1' + (fig.dataset.start ? '&start=' + fig.dataset.start : '');
+        var frame = document.createElement('iframe');
+        frame.src = src;
+        frame.title = fig.querySelector('.video-title').textContent;
+        frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+        frame.allowFullscreen = true;
+        this.replaceWith(frame);
+      });
+    });
+
+    root.querySelectorAll('.labeled').forEach(function (box) {
+      var pins = box.querySelectorAll('.labeled-pin');
+      var panels = box.querySelectorAll('.labeled-panel');
+      var empty = box.querySelector('.labeled-empty');
+      pins.forEach(function (pin) {
+        pin.addEventListener('click', function () {
+          var i = pin.dataset.index;
+          pins.forEach(function (p) {
+            p.setAttribute('aria-pressed', String(p === pin));
+            if (p === pin) p.classList.add('is-seen');
           });
-          btn.classList.add(ok ? 'is-right' : 'is-wrong');
-          feedback.hidden = false;
-          feedback.textContent = ok ? 'Bonne réponse.' : 'Pas tout à fait. Essayez encore, ou lisez l\u2019explication.';
-          feedback.className = 'feedback ' + (ok ? 'ok' : 'ko');
-          explanation.hidden = false;
+          panels.forEach(function (panel) { panel.hidden = panel.dataset.index !== i; });
+          empty.hidden = true;
         });
       });
     });
 
-    root.querySelectorAll('.hm-item').forEach(function (item) {
-      var expected = parseInt(item.dataset.score, 10);
-      var result = item.querySelector('.hm-result');
-      var verdict = item.querySelector('.hm-verdict');
-      item.querySelectorAll('.hm-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var value = parseInt(btn.dataset.value, 10);
-          item.querySelectorAll('.hm-btn').forEach(function (b) {
-            b.classList.toggle('is-chosen', b === btn);
-            b.classList.toggle('is-expected', parseInt(b.dataset.value, 10) === expected);
-          });
-          var gap = Math.abs(value - expected);
-          verdict.textContent = gap === 0
-            ? 'Même lecture que la nôtre (' + expected + '/3).'
-            : 'Notre lecture : ' + expected + '/3 (écart de ' + gap + ').';
-          result.hidden = false;
+    root.querySelectorAll('.sorting').forEach(function (box) {
+      var pool = box.querySelector('.sorting-pool');
+      var feedback = box.querySelector('.sorting-feedback');
+      var total = box.querySelectorAll('.sorting-item').length;
+      var selected = null;
+      function select(item) {
+        box.querySelectorAll('.sorting-item').forEach(function (b) {
+          b.setAttribute('aria-pressed', String(b === item));
         });
+        selected = item;
+      }
+      box.querySelectorAll('.sorting-item').forEach(function (item) {
+        item.addEventListener('click', function () { if (!item.disabled) select(item); });
+      });
+      box.querySelectorAll('.sorting-pile').forEach(function (pile) {
+        pile.querySelector('.sorting-target').addEventListener('click', function () {
+          if (!selected) { feedback.textContent = 'Choisissez d’abord une formule.'; return; }
+          if (selected.dataset.pile === pile.dataset.pile) {
+            selected.disabled = true;
+            selected.setAttribute('aria-pressed', 'false');
+            selected.classList.add('is-sorted');
+            pile.querySelector('.sorting-drop').appendChild(selected);
+            selected = null;
+            var done = box.querySelectorAll('.sorting-item.is-sorted').length;
+            feedback.textContent = done === total ? 'Bravo, tout est classé !' : 'Bien vu. ' + (total - done) + ' formule(s) restante(s).';
+            feedback.className = 'sorting-feedback ok';
+          } else {
+            selected.classList.remove('is-wrong');
+            void selected.offsetWidth;
+            selected.classList.add('is-wrong');
+            feedback.textContent = 'Pas dans cette catégorie. Essayez-en une autre.';
+            feedback.className = 'sorting-feedback ko';
+          }
+        });
+      });
+      box.querySelector('.sorting-reset').addEventListener('click', function () {
+        var items = Array.prototype.slice.call(box.querySelectorAll('.sorting-item'));
+        shuffle(items).forEach(function (item) {
+          item.disabled = false;
+          item.classList.remove('is-sorted', 'is-wrong');
+          item.setAttribute('aria-pressed', 'false');
+          pool.appendChild(item);
+        });
+        selected = null;
+        feedback.textContent = '';
       });
     });
 
@@ -177,9 +338,9 @@
     });
   }
 
-  // Modules comptés dans la progression : tous sauf l'accueil et les crédits.
+  // Modules comptés dans la progression : les chapitres et la conclusion.
   function countable() {
-    return modules.filter(function (m) { return m.id !== 'accueil' && m.id !== 'credits'; });
+    return modules.filter(function (m) { return ['accueil', 'references', 'mentions'].indexOf(m.id) === -1; });
   }
 
   /* ---------- Rendu ---------- */

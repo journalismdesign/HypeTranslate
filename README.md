@@ -1,7 +1,13 @@
 # Littératie du hype — version Synth
 
-Adaptation en français, aux couleurs de Synth, du cours en ligne
-[*Hype Literacy*](https://akademie.dw.de/hype-literacy/) de la DW Akademie et de Hype Studies.
+Traduction française, aux couleurs de Synth, du cours en ligne
+[*The Hype Literacy Toolkit for Journalists*](https://akademie.dw.de/hype-literacy/)
+(DW Akademie et Hype Studies, mars 2026).
+
+> **Licence de l'original : Creative Commons BY-NC-ND.** Crédit obligatoire
+> (« DW Akademie with support from the German Federal Ministry of Economic Cooperation
+> and Development »), usage non commercial, et **aucune modification — traduction comprise —
+> sans l'autorisation de la DW Akademie**. Ne pas diffuser cette version sans cet accord.
 
 ## Structure
 
@@ -11,14 +17,33 @@ css/style.css                 habillage, construit sur les jetons du design syst
 css/synth/                    jetons copiés du design system « Synth. » (Claude Design) + @font-face
 js/markdown.js                mini-convertisseur Markdown, sans dépendance
 js/app.js                     découpage en modules, navigation, exercices, progression
-contenu/hype-literacy.fr.md   TOUS les textes du parcours
+contenu/hype-literacy.fr.md   TOUS les textes du parcours (traduction française)
+source/hype-literacy.en.md    texte original anglais, extrait automatiquement, même format
+outils/rise2md.py             extraction du cours Articulate Rise -> Markdown + médias
+assets/cours/                 images du cours original (20 fichiers)
 assets/                       logos Synth., œil, motif diamant, polices (Coolvetica, IBM Plex Mono)
 ```
 
 ## Modifier les textes
 
-Tout se passe dans `contenu/hype-literacy.fr.md`. La syntaxe des modules et des
-exercices (cartes, quiz, hype-o-mètre, check-list) est décrite en tête du fichier.
+Tout se passe dans `contenu/hype-literacy.fr.md`. La syntaxe des chapitres et des blocs
+(images, galeries, carrousel, vidéos, encadrés, citations, cartes, accordéon, tri,
+image annotée, tableaux) est décrite en tête du fichier.
+
+## Mettre à jour depuis le cours original
+
+Le cours de la DW Akademie est un export Articulate Rise : tout son contenu est dans
+`runtime-data.js`. Pour régénérer le texte anglais et retélécharger les médias :
+
+```
+curl -O https://akademie.dw.de/hype-literacy/runtime-data.js
+python3 outils/rise2md.py runtime-data.js source/hype-literacy.en.md --medias assets/cours
+```
+
+Comparer ensuite `source/hype-literacy.en.md` avec sa version précédente (`git diff`) pour
+repérer ce qui a changé et reporter les modifications dans la traduction.
+
+Les vidéos YouTube ne sont chargées qu'au clic du lecteur (domaine youtube-nocookie.com).
 
 ## Lancer en local
 
@@ -40,7 +65,11 @@ puis ouvrir <http://localhost:8000>. Le site peut aussi être publié tel quel
   `project/tokens/*.css` dans `css/synth/`.
 - **Licence des polices** : vérifier que la licence de Coolvetica (Typodermic) couvre
   l'intégration web avant de publier. IBM Plex Mono est sous licence libre (OFL).
-- **Textes** : il s'agit d'une adaptation libre rédigée d'après la présentation
-  publique du cours, pas d'une traduction du texte original (inaccessible lors de la
-  rédaction). À relire et à confronter au cours de la DW Akademie, notamment pour
-  les questions de droits et de crédits.
+- **Autorisation de la DW Akademie** : indispensable avant toute diffusion (clause ND).
+- **Relecture de la traduction** : traduction intégrale du texte original, à relire.
+  Les citations (Frankfurt, Stilgoe, Thiel, McLuhan, Winner, Mutiso) sont des traductions
+  libres ; *On Bullshit* de Frankfurt existe en français (*De l'art de dire des conneries*,
+  10/18, 2006) : remplacer par la traduction publiée si les droits le permettent.
+- **Corrections par rapport à l'original** : coquilles corrigées en traduisant
+  (« unclock » → « unlock », « Elon Muks » → « Elon Musk », « Gil Durand » → « Gil Duran »),
+  doublons de titres supprimés, liens mal formés des références nettoyés.

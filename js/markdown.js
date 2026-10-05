@@ -1,7 +1,8 @@
 /*
  * Mini-convertisseur Markdown → HTML, sans dépendance.
  * Couvre ce qu'utilise contenu/*.md : titres, paragraphes, listes (puces,
- * numérotées, cases à cocher), citations, gras, italique, liens, blocs de code.
+ * numérotées, cases à cocher), citations, tableaux, gras, italique, liens,
+ * retours à la ligne <br>, blocs de code.
  * Les blocs de code nommés (```quiz, ```cartes…) sont confiés à `blockHandlers`.
  */
 (function (global) {
@@ -22,6 +23,8 @@
       var external = /^https?:\/\//.test(href);
       return '<a href="' + href + '"' + (external ? ' target="_blank" rel="noopener"' : '') + '>' + label + '</a>';
     });
+    out = out.replace(/&lt;br\s*\/?&gt;/g, '<br>');
+    out = out.replace(/\*\*\*([^*]+)\*\*\*/g, '<strong><em>$1</em></strong>');
     out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     out = out.replace(/(^|[^*\w])\*([^*\n]+)\*(?!\w)/g, '$1<em>$2</em>');
     return out;
@@ -35,8 +38,19 @@
       .replace(/^-|-$/g, '');
   }
 
+  function splitRow(line) {
+    return line.trim().replace(/^\||\|$/g, '').split(/(?<!\\)\|/).map(function (c) {
+      return c.trim().replace(/\\\|/g, '|');
+    });
+  }
+
   function render(src, blockHandlers) {
     blockHandlers = blockHandlers || {};
+    var api = {
+      inline: inline,
+      escape: escapeHtml,
+      render: function (text) { return render(text, blockHandlers); }
+    };
     var lines = src.replace(/\r\n?/g, '\n').split('\n');
     var html = [];
     var i = 0;
@@ -53,7 +67,7 @@
         while (i < lines.length && !/^```\s*$/.test(lines[i])) body.push(lines[i++]);
         i++;
         if (lang && blockHandlers[lang]) {
-          html.push(blockHandlers[lang](body.join('\n'), { inline: inline, escape: escapeHtml }));
+          html.push(blockHandlers[lang](body.join('\n'), api));
         } else {
           html.push('<pre><code>' + escapeHtml(body.join('\n')) + '</code></pre>');
         }
@@ -74,6 +88,24 @@
         var level = heading[1].length;
         html.push('<h' + level + ' id="' + slugify(heading[2]) + '">' + inline(heading[2]) + '</h' + level + '>');
         i++;
+        continue;
+      }
+
+      // Tableau : ligne d'en-tête, ligne de séparation |---|, puis les lignes
+      if (/^\|/.test(line) && i + 1 < lines.length && /^\|[\s:|-]+\|?\s*$/.test(lines[i + 1])) {
+        var head = splitRow(line);
+        var rows = [];
+        i += 2;
+        while (i < lines.length && /^\|/.test(lines[i])) rows.push(splitRow(lines[i++]));
+        html.push('<div class="table-wrap"><table><thead><tr>' +
+          head.map(function (c) { return '<th scope="col">' + inline(c) + '</th>'; }).join('') +
+          '</tr></thead><tbody>' +
+          rows.map(function (r) {
+            var empty = r.slice(1).every(function (c) { return !c; });
+            if (empty) return '<tr class="row-group"><th colspan="' + head.length + '" scope="colgroup">' + inline(r[0]) + '</th></tr>';
+            return '<tr>' + r.map(function (c) { return '<td>' + inline(c) + '</td>'; }).join('') + '</tr>';
+          }).join('') +
+          '</tbody></table></div>');
         continue;
       }
 
@@ -111,7 +143,7 @@
       while (
         i < lines.length &&
         !/^\s*$/.test(lines[i]) &&
-        !/^(#{1,4}\s|>|```|\s*([-*]|\d+\.)\s+|\s*<!--)/.test(lines[i])
+        !/^(#{1,4}\s|>|```|\||\s*([-*]|\d+\.)\s+|\s*<!--)/.test(lines[i])
       ) para.push(lines[i++]);
       html.push('<p>' + inline(para.join(' ')) + '</p>');
     }
