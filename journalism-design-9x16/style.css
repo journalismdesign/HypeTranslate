@@ -1,0 +1,308 @@
+/*
+ * journalism.design — animation de présentation 9:16
+ * Direction : une épreuve d'imprimerie. Fond encre, repères de mise en page,
+ * traits de coupe et croix de repérage CMJN légèrement décalées.
+ * Le point de « journalism.design » est le fil conducteur : il devient le magenta.
+ * La scène est dessinée en 1080 × 1920 px puis mise à l'échelle de la fenêtre.
+ */
+
+:root {
+  --page: #070d22;          /* autour du cadre */
+  --ink: #0e1a3c;           /* fond de la scène */
+  --ink-soft: #1a2a57;
+  --paper: #eef1f6;         /* texte principal, cartes */
+  --paper-dim: rgba(238, 241, 246, .58);
+  --accent: #ff2e88;        /* magenta d'impression */
+  --cyan: #3cc8f0;
+  --yellow: #ffd23f;
+  --guide-fill: rgba(60, 200, 240, .055);
+  --guide-line: rgba(60, 200, 240, .24);
+
+  --font-display: "Bricolage Grotesque", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Lecteur ---------- */
+
+.viewer {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding-inline: 16px;
+  padding-block: 16px;
+}
+
+.frame {
+  position: relative;
+  width: min(100%, calc((100dvh - 150px) * 9 / 16));
+  min-width: 200px;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  background: var(--ink);
+  border-radius: 10px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .45), 0 0 0 1px rgba(238, 241, 246, .08);
+}
+
+.controls {
+  width: min(100%, 520px);
+  display: grid;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.controls-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.controls button {
+  font: inherit;
+  color: var(--paper);
+  background: var(--ink-soft);
+  border: 1px solid rgba(238, 241, 246, .14);
+  border-radius: 6px;
+  padding: 7px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.controls button:hover { border-color: var(--paper-dim); }
+.controls button:focus-visible,
+.controls input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.controls button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+
+#scrub { flex: 1; min-width: 0; accent-color: var(--accent); }
+
+#time {
+  font-variant-numeric: tabular-nums;
+  color: var(--paper-dim);
+  min-width: 4.5em;
+  text-align: right;
+}
+
+.chapters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chapters button { padding: 5px 10px; text-transform: uppercase; letter-spacing: .08em; font-size: 11px; }
+
+/* Mode export (#export ou ?export) : la scène seule, plein cadre, pour la capture vidéo. */
+.is-export .viewer { padding: 0; }
+.is-export .controls { display: none; }
+.is-export .frame { width: 100vw; height: 100vh; border-radius: 0; box-shadow: none; aspect-ratio: auto; }
+
+/* ---------- Scène 1080 × 1920 ---------- */
+
+.stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1080px;
+  height: 1920px;
+  transform-origin: 0 0;
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 88;
+  color: var(--paper);
+}
+
+.scene { position: absolute; inset: 0; }
+
+.ch { display: inline-block; white-space: pre; }
+.w { display: inline-block; }
+
+/* Repères de mise en page : 6 colonnes */
+.guides {
+  position: absolute;
+  inset: 0 72px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 24px;
+}
+.guide {
+  background: var(--guide-fill);
+  border-inline: 1px solid var(--guide-line);
+}
+
+/* Traits de coupe */
+.crop { position: absolute; width: 54px; height: 54px; border: 0 solid var(--paper-dim); }
+.crop.tl { top: 36px; left: 36px; border-top-width: 2px; border-left-width: 2px; }
+.crop.tr { top: 36px; right: 36px; border-top-width: 2px; border-right-width: 2px; }
+.crop.bl { bottom: 36px; left: 36px; border-bottom-width: 2px; border-left-width: 2px; }
+.crop.br { bottom: 36px; right: 36px; border-bottom-width: 2px; border-right-width: 2px; }
+
+/* Croix de repérage CMJN, volontairement hors repérage de quelques pixels */
+.reg { position: absolute; top: 34px; left: 50%; width: 64px; height: 64px; margin-left: -32px; }
+.reg svg { position: absolute; inset: 0; mix-blend-mode: screen; }
+
+.slug {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 44px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 22px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+
+/* Scène 1 — accroche */
+#s1 { padding: 0 96px; display: flex; flex-direction: column; justify-content: center; gap: 36px; }
+#s1 .l1 { font-size: 132px; font-weight: 700; line-height: 1; letter-spacing: -.03em; }
+#s1 .l2 { font-size: 92px; font-weight: 400; line-height: 1.05; letter-spacing: -.02em; color: var(--paper-dim); text-wrap: balance; }
+#s1 .l2 .hl { color: var(--accent); font-weight: 700; }
+.caret {
+  display: inline-block;
+  width: 10px;
+  height: .9em;
+  margin-left: 8px;
+  vertical-align: -.08em;
+  background: var(--accent);
+  animation: blink 1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Scène 2 — la profusion des formats */
+#s2 { padding: 300px 84px 0; }
+.tiles { display: flex; flex-wrap: wrap; gap: 22px 18px; align-content: flex-start; }
+.tile {
+  font-size: 58px;
+  font-weight: 600;
+  line-height: 1;
+  padding: 22px 34px 26px;
+  border: 3px solid var(--paper);
+  border-radius: 999px;
+}
+.tile.fill { background: var(--paper); color: var(--ink); }
+.tile.hot { background: var(--accent); border-color: var(--accent); color: var(--ink); }
+.tile.dash { border-style: dashed; color: var(--paper-dim); border-color: var(--paper-dim); }
+#s2 .question {
+  position: absolute;
+  left: 96px;
+  right: 96px;
+  bottom: 300px;
+  font-size: 92px;
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -.025em;
+  text-wrap: balance;
+}
+
+/* Scène 3 — la marque */
+.logo-wrap { position: absolute; top: 620px; left: 72px; right: 72px; }
+.logo {
+  font-size: 176px;
+  font-weight: 800;
+  line-height: .92;
+  letter-spacing: -.045em;
+  font-variation-settings: "wdth" 80;
+}
+.logo .line { display: block; }
+.logo .line + .line { text-align: right; }
+.dot {
+  display: inline-block;
+  position: relative;
+  width: .2em;
+  height: .2em;
+  margin-right: .04em;
+  vertical-align: baseline;
+  border-radius: 50%;
+  background: var(--accent);
+}
+#tag { position: absolute; top: 1080px; left: 72px; right: 72px; display: grid; gap: 26px; }
+#tag .kicker {
+  font-family: var(--font-mono);
+  font-size: 30px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+#tag .claim { font-size: 70px; font-weight: 500; line-height: 1.08; letter-spacing: -.02em; text-wrap: balance; }
+
+/* Scène 4 — les services, comme une pile d'épreuves */
+.cards { position: absolute; top: 560px; left: 84px; right: 84px; height: 980px; }
+.card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+  padding: 72px 68px;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: 4px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, .35);
+}
+.card .eyebrow {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 28px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.card .eyebrow .n { color: var(--accent); font-weight: 600; }
+.card h2 {
+  margin: 0;
+  font-size: 150px;
+  font-weight: 800;
+  line-height: .9;
+  letter-spacing: -.04em;
+  font-variation-settings: "wdth" 80;
+}
+.card p { margin: 0; font-size: 58px; font-weight: 500; line-height: 1.12; letter-spacing: -.015em; text-wrap: balance; }
+.card .tags {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 26px;
+}
+.card .tags span { border: 2px solid var(--ink); border-radius: 999px; padding: 8px 18px; }
+.card .bar { height: 14px; width: 120px; background: var(--accent); }
+
+/* Scène 5 — contact */
+#s6 { padding: 0 72px; }
+#s6 .cta { position: absolute; top: 1010px; left: 72px; right: 72px; display: grid; gap: 54px; }
+#s6 .say { font-size: 112px; font-weight: 700; line-height: .98; letter-spacing: -.035em; text-wrap: balance; }
+#s6 .url {
+  justify-self: start;
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 58px;
+  font-weight: 500;
+  padding-bottom: 14px;
+}
+#s6 .url .underline { position: absolute; left: 0; right: 0; bottom: 0; height: 8px; background: var(--accent); transform-origin: left; }
+#s6 .list {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  line-height: 1.6;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--paper-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret { animation: none; }
+}
