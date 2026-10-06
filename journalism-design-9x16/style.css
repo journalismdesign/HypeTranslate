@@ -1,0 +1,273 @@
+/*
+ * journalism.design — animation de présentation 9:16
+ * Direction artistique : design system « Synth. » (Claude Design).
+ * Fond noir et motif de losanges, Coolvetica pour les titres, IBM Plex Mono pour le reste,
+ * un seul accent cyan par écran, accolades, angles droits, mouvements brefs et mécaniques.
+ * La scène est dessinée en 1080 × 1920 px puis mise à l'échelle de la fenêtre.
+ */
+
+@font-face { font-family: "Coolvetica"; src: url("assets/fonts/coolvetica-rg.otf") format("opentype"); font-weight: 400; font-display: block; }
+@font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/IBMPlexMono-Regular.woff") format("woff"); font-weight: 400; font-display: block; }
+@font-face { font-family: "IBM Plex Mono"; src: url("assets/fonts/IBMPlexMono-Bold.ttf") format("truetype"); font-weight: 700; font-display: block; }
+
+/* Jetons repris de Synth. (tokens/colors.css, typography.css, effects.css) */
+:root {
+  --synth-cyan: #00ffe0;
+  --black: #000000;
+  --gray-1000: #050505;
+  --gray-950: #0a0a0a;
+  --gray-900: #101010;
+  --gray-850: #141414;
+  --gray-800: #1c1c1c;
+  --gray-700: #262626;
+  --gray-600: #3a3a3a;
+  --gray-500: #555555;
+  --gray-400: #7a7a7a;
+  --gray-300: #a3a3a3;
+  --white: #ffffff;
+  --white-a10: rgba(255, 255, 255, .10);
+  --white-a60: rgba(255, 255, 255, .60);
+
+  --font-display: "Coolvetica", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --track-display: -0.02em;
+  --track-label: 0.08em;
+  --track-eyebrow: 0.16em;
+
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--gray-1000);
+  color: var(--white);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Lecteur ---------- */
+
+.viewer {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding-inline: 16px;
+  padding-block: 16px;
+}
+
+.frame {
+  position: relative;
+  width: min(100%, calc((100dvh - 150px) * 9 / 16));
+  min-width: 200px;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  background: var(--black);
+  box-shadow: 0 0 0 1px var(--white-a10);
+}
+
+.controls {
+  width: min(100%, 520px);
+  display: grid;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.controls-row { display: flex; align-items: center; gap: 10px; }
+
+.controls button {
+  font: inherit;
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  color: var(--white);
+  background: var(--gray-900);
+  border: 1px solid var(--gray-700);
+  border-radius: 2px;
+  padding: 7px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 140ms, color 140ms;
+}
+.controls button:hover { border-color: var(--synth-cyan); color: var(--synth-cyan); }
+.controls button:active { transform: translateY(1px); }
+.controls button:focus-visible,
+.controls input:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--black), 0 0 0 4px var(--synth-cyan); }
+
+#scrub { flex: 1; min-width: 0; accent-color: var(--synth-cyan); }
+
+#time { font-variant-numeric: tabular-nums; color: var(--gray-400); min-width: 4.5em; text-align: right; }
+
+.chapters { display: flex; flex-wrap: wrap; gap: 6px; }
+.chapters button { padding: 5px 10px; font-size: 11px; }
+
+/* Mode export (#export ou ?export) : la scène seule, plein cadre, pour la capture vidéo. */
+.is-export .viewer { padding: 0; }
+.is-export .controls { display: none; }
+.is-export .frame { width: 100vw; height: 100vh; box-shadow: none; aspect-ratio: auto; }
+
+/* ---------- Scène 1080 × 1920 ---------- */
+
+.stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1080px;
+  height: 1920px;
+  transform-origin: 0 0;
+  overflow: hidden;
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-mono);
+}
+
+.scene { position: absolute; inset: 0; }
+.ch { display: inline-block; white-space: pre; }
+.w { display: inline-block; }
+
+/* Motif de losanges (texture de la bannière Synth.) : carrés à 45°, valeurs de 0 à 20 */
+.diamonds { position: absolute; inset: 0; }
+.diamond {
+  position: absolute;
+  width: 68px;   /* diagonale ≈ 96 px */
+  height: 68px;
+  transform: rotate(45deg);
+}
+
+/* Bandeau haut et filet de progression */
+.topbar {
+  position: absolute;
+  top: 64px;
+  left: 72px;
+  right: 72px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 24px;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--gray-400);
+}
+.topbar .count { font-variant-numeric: tabular-nums; }
+.progress {
+  position: absolute;
+  left: 72px;
+  right: 72px;
+  bottom: 72px;
+  height: 2px;
+  background: var(--white-a10);
+}
+.progress span { position: absolute; inset: 0; background: var(--white-a60); transform-origin: 0 50%; transform: scaleX(0); }
+
+.caret {
+  display: inline-block;
+  width: .46em;
+  height: .78em;
+  margin-left: .08em;
+  vertical-align: -.02em;
+  background: var(--synth-cyan);
+  animation: blink 1.05s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Scène 1 — accroche */
+#s1 { padding: 0 72px; display: flex; flex-direction: column; justify-content: center; gap: 40px; }
+#s1 .l1 { font-family: var(--font-display); font-size: 156px; line-height: .94; letter-spacing: var(--track-display); }
+#s1 .l2 { font-family: var(--font-display); font-size: 96px; line-height: 1.06; letter-spacing: var(--track-display); color: var(--gray-300); text-wrap: balance; }
+
+/* Scène 2 — les formats, imprimés comme un journal de terminal */
+#s2 .log {
+  position: absolute;
+  top: 240px;
+  left: 72px;
+  right: 72px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 42px;
+  line-height: 1.6;
+}
+#s2 .log li { display: flex; gap: 28px; }
+#s2 .log .p { color: var(--gray-500); font-variant-numeric: tabular-nums; }
+#s2 .question {
+  position: absolute;
+  left: 72px;
+  right: 72px;
+  bottom: 220px;
+  font-family: var(--font-display);
+  font-size: 104px;
+  line-height: .98;
+  letter-spacing: var(--track-display);
+  text-wrap: balance;
+}
+
+/* Scène 3 — la marque */
+.wordmark {
+  font-family: var(--font-display);
+  letter-spacing: var(--track-display);
+  line-height: .9;
+  white-space: nowrap;
+}
+.wordmark .line { display: block; }
+.wordmark .dot {
+  display: inline-block;
+  width: .17em;
+  height: .17em;
+  margin: 0 .03em 0 .02em;
+  background: var(--synth-cyan);
+}
+#s3 .wordmark { position: absolute; top: 640px; left: 72px; font-size: 200px; }
+#s3 .wordmark .line + .line { padding-left: .9em; }
+#s3 .pos {
+  position: absolute;
+  top: 1100px;
+  left: 72px;
+  right: 72px;
+  display: grid;
+  gap: 40px;
+}
+#s3 .braces { font-size: 34px; letter-spacing: var(--track-label); color: var(--gray-300); }
+#s3 .claim { font-family: var(--font-display); font-size: 72px; line-height: 1.04; letter-spacing: var(--track-display); text-wrap: balance; }
+
+/* Scène 4 — les services : cartes Synth. (valeur + filet, eyebrow, titre, texte) */
+#s4 .cards {
+  position: absolute;
+  top: 300px;
+  left: 72px;
+  right: 72px;
+  display: grid;
+  gap: 24px;
+}
+.card {
+  display: grid;
+  gap: 18px;
+  padding: 40px 44px 44px;
+  background: var(--gray-900);
+  border: 2px solid var(--white-a10);
+  border-radius: 0;
+}
+.card .eyebrow {
+  font-size: 22px;
+  letter-spacing: var(--track-eyebrow);
+  text-transform: uppercase;
+  color: var(--gray-400);
+  font-variant-numeric: tabular-nums;
+}
+.card h2 { margin: 0; font-family: var(--font-display); font-weight: 400; font-size: 84px; line-height: .94; letter-spacing: var(--track-display); }
+.card p { margin: 0; font-size: 30px; line-height: 1.5; color: var(--gray-300); text-wrap: pretty; }
+
+/* Scène 5 — contact */
+#s5 .wordmark { position: absolute; top: 560px; left: 72px; font-size: 140px; }
+#s5 .wordmark .line + .line { padding-left: .9em; }
+#s5 .cta { position: absolute; top: 980px; left: 72px; right: 72px; display: grid; gap: 56px; }
+#s5 .say { font-family: var(--font-display); font-size: 112px; line-height: .96; letter-spacing: var(--track-display); text-wrap: balance; }
+#s5 .url { font-size: 48px; letter-spacing: var(--track-label); padding-bottom: 20px; border-bottom: 2px solid var(--white); justify-self: start; }
+#s5 .braces { font-size: 28px; line-height: 1.6; letter-spacing: var(--track-label); color: var(--gray-400); }
+
+@media (prefers-reduced-motion: reduce) {
+  .caret { animation: none; }
+}

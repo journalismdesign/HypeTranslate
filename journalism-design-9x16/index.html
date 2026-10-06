@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>journalism.design en 9:16</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="viewer">
+  <div class="frame" id="frame" role="img" aria-label="Animation de présentation de journalism.design">
+    <div class="stage" id="stage"><!-- rempli par main.js à partir de CONTENT --></div>
+  </div>
+
+  <div class="controls" aria-label="Contrôles de lecture">
+    <div class="controls-row">
+      <button type="button" id="play" aria-pressed="true">Pause</button>
+      <button type="button" id="restart">Rejouer</button>
+      <input type="range" id="scrub" min="0" max="1" step="0.001" value="0" aria-label="Position dans l'animation">
+      <span id="time">0,0 s</span>
+    </div>
+    <div class="chapters" id="chapters"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
