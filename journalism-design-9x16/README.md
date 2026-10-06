@@ -18,7 +18,7 @@ IBM Plex Mono, un seul accent cyan `#00FFE0`, accolades, angles droits, mouvemen
 
 ```
 index.html   cadre 9:16 et contrôles de lecture
-style.css    direction artistique (épreuve d'imprimerie : encre, repères, magenta)
+style.css    direction artistique (jetons du design system Synth.)
 main.js      CONTENT (tous les textes) puis la timeline GSAP
 assets/      polices Coolvetica et IBM Plex Mono (copiées du design system)
 ```
