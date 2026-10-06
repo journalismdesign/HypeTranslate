@@ -1,64 +1,49 @@
 /*
  * journalism.design — animation de présentation 9:16 (GSAP 3)
+ * Direction artistique : design system « Synth. ».
  *
  * TOUS LES TEXTES SONT DANS CONTENT, CI-DESSOUS.
  * Les formulations des services sont des propositions à valider :
- * elles n'ont pas pu être vérifiées sur le site journalism.design.
+ * elles n'ont pas pu être vérifiées sur jd.snth.ch (site inaccessible lors de la rédaction).
  */
 
 const CONTENT = {
   hook: {
     line1: "Une information.",
-    line2: "{Mille} façons de la raconter.", // {…} = mot en magenta
+    line2: "Mille façons de la raconter.",
   },
   formats: [
-    { label: "article long", style: "fill" },
-    { label: "vidéo verticale" },
-    { label: "newsletter", style: "dash" },
-    { label: "podcast" },
-    { label: "datavisualisation", style: "fill" },
-    { label: "live" },
-    { label: "carrousel", style: "dash" },
-    { label: "récit interactif", style: "hot" },
-    { label: "IA générative" },
-    { label: "jeu d'info", style: "fill" },
-    { label: "audio", style: "dash" },
+    "article long",
+    "vidéo verticale",
+    "newsletter",
+    "podcast",
+    "datavisualisation",
+    "live",
+    "carrousel",
+    "récit interactif",
+    "IA générative",
+    "jeu d'info",
   ],
   question: "Laquelle sert vraiment votre public ?",
   brand: {
     line1: "journalism",
-    line2: "design", // le point est dessiné : c'est lui qui fait la transition
-    kicker: "Innovation éditoriale",
+    line2: "design", // le point cyan est dessiné entre les deux lignes
+    positioning: "Innovation éditoriale", // affiché entre accolades
     claim: "On aide les rédactions à inventer leurs formats.",
   },
   services: [
-    {
-      title: "Veille",
-      text: "Une newsletter qui décrypte l'innovation dans les médias.",
-      tags: ["tendances", "outils", "cas d'école"],
-    },
-    {
-      title: "Formation",
-      text: "Des ateliers pratiques pour les rédactions et les écoles.",
-      tags: ["formats", "IA", "méthodes"],
-    },
-    {
-      title: "Conseil",
-      text: "Stratégie éditoriale et accompagnement de vos projets.",
-      tags: ["audit", "stratégie", "audiences"],
-    },
-    {
-      title: "Prototypage",
-      text: "Des formats conçus, testés et livrés avec vos équipes.",
-      tags: ["design", "code", "tests lecteurs"],
-    },
+    { title: "Veille", text: "Une newsletter qui décrypte l'innovation dans les médias." },
+    { title: "Formation", text: "Des ateliers pratiques pour les rédactions et les écoles." },
+    { title: "Conseil", text: "Stratégie éditoriale et accompagnement de vos projets." },
+    { title: "Prototypage", text: "Des formats conçus, testés et livrés avec vos équipes." },
   ],
   cta: {
     say: "Parlons de votre projet.",
     url: "journalism.design",
   },
-  slug: "journalism.design · épreuve 1080 × 1920",
 };
+
+const SCENES = ["Ouverture", "Formats", "Marque", "Services", "Contact"];
 
 /* ---------- Construction de la scène ---------- */
 
@@ -68,10 +53,11 @@ const EXPORT = /(^|[?&#])export\b/.test(location.search + location.hash);
 if (EXPORT) document.documentElement.classList.add("is-export");
 
 const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const pad = (n) => String(n).padStart(2, "0");
 
-// Découpe un texte en lettres. Les mots restent insécables pour que les retours à la ligne tombent juste.
-function chars(text) {
-  return text
+// Lettres (pour la frappe) ; les mots restent insécables.
+const chars = (text) =>
+  text
     .split(/(\s+)/)
     .map((part) =>
       /^\s+$/.test(part)
@@ -79,34 +65,37 @@ function chars(text) {
         : `<span class="w">${[...part].map((c) => `<span class="ch">${esc(c)}</span>`).join("")}</span>`
     )
     .join("");
+
+const words = (text) => text.split(/\s+/).map((w) => `<span class="w">${esc(w)}</span>`).join(" ");
+
+const wordmark = () => `
+  <div class="wordmark" aria-label="${esc(CONTENT.brand.line1 + "." + CONTENT.brand.line2)}">
+    <span class="line">${chars(CONTENT.brand.line1)}</span>
+    <span class="line"><span class="dot"></span>${chars(CONTENT.brand.line2)}</span>
+  </div>`;
+
+// Motif de losanges : un réseau en quinconce, valeurs tirées entre #000 et #141414 comme la bannière Synth.
+function diamonds() {
+  const step = 96, half = step / 2, out = [];
+  for (let row = -1; row * half < 1920 + step; row++) {
+    for (let col = -1; col * step < 1080 + step; col++) {
+      const x = col * step + (row % 2 ? half : 0) - 34;
+      const y = row * half - 34;
+      const v = Math.round(Math.pow(Math.random(), 2.2) * 20);
+      out.push(`<i class="diamond" style="left:${x}px;top:${y}px;background:rgb(${v},${v},${v})"></i>`);
+    }
+  }
+  return out.join("");
 }
-
-// Découpe en mots ; {mot} est mis en évidence.
-function words(text) {
-  return text
-    .split(/\s+/)
-    .map((w) => {
-      const hl = /^\{(.+)\}(.*)$/.exec(w);
-      return hl ? `<span class="w"><span class="hl">${esc(hl[1])}</span>${esc(hl[2])}</span>` : `<span class="w">${esc(w)}</span>`;
-    })
-    .join(" ");
-}
-
-const regCross = (color, dx, dy) => `
-  <svg viewBox="0 0 64 64" style="transform:translate(${dx}px,${dy}px)" aria-hidden="true">
-    <circle cx="32" cy="32" r="16" fill="none" stroke="${color}" stroke-width="2.5"/>
-    <path d="M32 2V62M2 32H62" stroke="${color}" stroke-width="2.5"/>
-  </svg>`;
-
-const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 stage.innerHTML = `
-  <div class="guides" aria-hidden="true">${'<div class="guide"></div>'.repeat(6)}</div>
-  <div class="marks" aria-hidden="true">
-    <div class="crop tl"></div><div class="crop tr"></div><div class="crop bl"></div><div class="crop br"></div>
-    <div class="reg">${regCross(css("--cyan"), -2, 1)}${regCross(css("--accent"), 2, -1)}${regCross(css("--yellow"), 0, 2)}</div>
-    <div class="slug">${esc(CONTENT.slug)}</div>
+  <div class="diamonds" aria-hidden="true">${diamonds()}</div>
+
+  <div class="topbar" aria-hidden="true">
+    <span>${esc(CONTENT.cta.url)}</span>
+    <span class="count">01 / ${pad(SCENES.length)}</span>
   </div>
+  <div class="progress" aria-hidden="true"><span></span></div>
 
   <section class="scene" id="s1">
     <div class="l1">${chars(CONTENT.hook.line1)}<span class="caret"></span></div>
@@ -114,147 +103,133 @@ stage.innerHTML = `
   </section>
 
   <section class="scene" id="s2">
-    <div class="tiles">${CONTENT.formats.map((f) => `<span class="tile ${f.style || ""}">${esc(f.label)}</span>`).join("")}</div>
-    <div class="question">${words(CONTENT.question)}</div>
+    <ul class="log">
+      ${CONTENT.formats.map((f, i) => `<li><span class="p">${pad(i + 1)}</span><span>${esc(f)}</span></li>`).join("")}
+    </ul>
+    <div class="question">${words(CONTENT.question)}<span class="caret"></span></div>
   </section>
 
   <section class="scene" id="s3">
-    <div class="logo-wrap">
-      <div class="logo" aria-label="${esc(CONTENT.brand.line1 + "." + CONTENT.brand.line2)}">
-        <span class="line">${chars(CONTENT.brand.line1)}</span>
-        <span class="line"><span class="dot"></span>${chars(CONTENT.brand.line2)}</span>
-      </div>
-    </div>
-  </section>
-
-  <section class="scene" id="s4">
-    <div id="tag">
-      <div class="kicker">${esc(CONTENT.brand.kicker)}</div>
+    ${wordmark()}
+    <div class="pos">
+      <div class="braces">{ ${esc(CONTENT.brand.positioning)} }</div>
       <div class="claim">${words(CONTENT.brand.claim)}</div>
     </div>
   </section>
 
-  <section class="scene" id="s5">
+  <section class="scene" id="s4">
     <div class="cards">
       ${CONTENT.services
         .map(
           (s, i) => `
         <article class="card">
-          <div class="eyebrow"><span>Service</span><span class="n">${i + 1}/${CONTENT.services.length}</span></div>
-          <div class="bar"></div>
-          <h2>${esc(s.title)}</h2>
-          <p>${words(s.text)}</p>
-          <div class="tags">${s.tags.map((t) => `<span>${esc(t)}</span>`).join("")}</div>
+          <div class="eyebrow">Service ${pad(i + 1)}</div>
+          <h2>${esc(s.title)}.</h2>
+          <p>${esc(s.text)}</p>
         </article>`
         )
         .join("")}
     </div>
   </section>
 
-  <section class="scene" id="s6">
+  <section class="scene" id="s5">
+    ${wordmark()}
     <div class="cta">
       <div class="say">${words(CONTENT.cta.say)}</div>
-      <div class="url">${esc(CONTENT.cta.url)}<span class="underline"></span></div>
-      <div class="list">${CONTENT.services.map((s) => esc(s.title)).join(" · ")}</div>
+      <div class="url">${esc(CONTENT.cta.url)}</div>
+      <div class="braces">{ ${CONTENT.services.map((s) => esc(s.title)).join(" · ")} }</div>
     </div>
   </section>
 `;
 
 /* ---------- Mise à l'échelle 1080 × 1920 → cadre ---------- */
 
-function fit() {
-  stage.style.transform = `scale(${frame.clientWidth / 1080})`;
-}
+const fit = () => (stage.style.transform = `scale(${frame.clientWidth / 1080})`);
 new ResizeObserver(fit).observe(frame);
 fit();
 
 /* ---------- Timeline ---------- */
 
-const q = (sel) => stage.querySelectorAll(sel);
-const cards = [...q(".card")];
+// Synth. : « Fast and mechanical. Fades and 8px rises; no bounce, no spring, no scale-in. »
+// Les montées sont un peu plus longues qu'en interface (la scène fait 1080 px de large).
+const RISE = 20;
+const cards = [...stage.querySelectorAll(".card")];
+const count = stage.querySelector(".topbar .count");
+const setCount = (i) => () => (count.textContent = `${pad(i)} / ${pad(SCENES.length)}`);
 
-// États de départ des scènes qui arrivent plus tard
-gsap.set(["#s2", "#s3", "#s4", "#s5", "#s6"], { autoAlpha: 0 });
-gsap.set(".dot", { scale: 0 });
-gsap.set(cards, { autoAlpha: 0 });
+gsap.set(["#s2", "#s3", "#s4", "#s5"], { autoAlpha: 0 });
 
 const tl = gsap.timeline({
   paused: true,
   repeat: EXPORT ? 0 : -1,
-  repeatDelay: 0.8,
-  defaults: { ease: "power3.out" },
+  repeatDelay: 0.6,
+  defaults: { ease: "power3.out", duration: 0.32 },
   onUpdate: syncUI,
 });
 
-/* 1. OUVERTURE — la page blanche se met en place, une phrase se tape */
+/* 1. OUVERTURE — le motif s'allume, une phrase se tape */
 tl.addLabel("Ouverture")
-  .from(".guide", { scaleY: 0, transformOrigin: "50% 0%", duration: 0.9, stagger: 0.07, ease: "power4.out" })
-  .from(".crop", { autoAlpha: 0, scale: 0.4, duration: 0.4, stagger: 0.06 }, "<0.2")
-  .from(".reg svg", { autoAlpha: 0, rotation: -90, duration: 0.6, stagger: 0.08 }, "<")
-  .from(".slug", { autoAlpha: 0, duration: 0.4 }, "<")
-  .from("#s1 .l1 .ch", { autoAlpha: 0, duration: 0.01, stagger: 0.055, ease: "none" }, "-=0.1")
-  .from("#s1 .l2 .w", { yPercent: 80, autoAlpha: 0, duration: 0.55, stagger: 0.08 }, "+=0.25")
-  .from("#s1 .l2 .hl", { color: css("--paper-dim"), duration: 0.4 }, "<0.1")
-  .to("#s1", { autoAlpha: 0, y: -90, duration: 0.45, ease: "power2.in" }, "+=1.1");
+  .call(setCount(1))
+  .from(".diamond", { opacity: 0, duration: 0.5, stagger: { amount: 1.1, grid: "auto", from: "center" }, ease: "none" })
+  .from([".topbar", ".progress"], { opacity: 0, y: -RISE / 2 }, 0.3)
+  .from("#s1 .l1 .ch", { opacity: 0, duration: 0.01, stagger: 0.06, ease: "none" }, 0.7)
+  .from("#s1 .l2 .w", { opacity: 0, y: RISE, stagger: 0.07 }, "+=0.3")
+  .to("#s1", { opacity: 0, duration: 0.22, ease: "power2.in" }, "+=1.2");
 
-/* 2. FORMATS — la profusion, puis la question */
+/* 2. FORMATS — la liste s'imprime ligne à ligne, puis la question */
 tl.addLabel("Formats")
+  .call(setCount(2))
   .set("#s2", { autoAlpha: 1 })
-  .fromTo(
-    "#s2 .tile",
-    { autoAlpha: 0, scale: 0.3, rotation: () => gsap.utils.random(-18, 18) },
-    { autoAlpha: 1, scale: 1, rotation: () => gsap.utils.random(-4, 4), duration: 0.5, stagger: { each: 0.075, from: "random" }, ease: "back.out(1.9)" }
-  )
-  .from("#s2 .question .w", { yPercent: 70, autoAlpha: 0, duration: 0.5, stagger: 0.06 }, "+=0.15")
-  .to("#s2 .tile", { y: () => gsap.utils.random(-30, 30), x: () => gsap.utils.random(-16, 16), duration: 1.4, ease: "sine.inOut" }, "<");
+  .from("#s2 .log li", { opacity: 0, duration: 0.01, stagger: 0.13, ease: "none" })
+  .to("#s2 .log li", { color: getComputedStyle(document.documentElement).getPropertyValue("--gray-600").trim(), duration: 0.3, ease: "none" }, "+=0.2")
+  .from("#s2 .question .w", { opacity: 0, y: RISE, stagger: 0.06 }, "<")
+  .from("#s2 .question .caret", { opacity: 0, duration: 0.01 }, ">")
+  .to("#s2", { opacity: 0, duration: 0.22, ease: "power2.in" }, "+=1.5");
 
-/* 3. MARQUE — le point magenta envahit tout, puis se range dans « .design » */
-tl.addLabel("Marque", "+=0.6")
-  .set("#s3", { autoAlpha: 1 }, "Marque")
-  .to(".dot", { scale: 1.6, duration: 0.3, ease: "back.out(3)" }, "Marque")
-  .to(".dot", { scale: 110, duration: 0.65, ease: "power3.in" })
-  .set(["#s2", "#s1"], { autoAlpha: 0 })
-  .to(".dot", { scale: 1, duration: 0.95, ease: "expo.inOut" }, "+=0.12")
-  .from("#s3 .logo .ch", { y: 70, autoAlpha: 0, duration: 0.55, stagger: 0.025, ease: "power4.out" }, "<0.5")
+/* 3. MARQUE — le point cyan apparaît seul, puis le nom se tape autour */
+tl.addLabel("Marque")
+  .call(setCount(3))
+  .set("#s3", { autoAlpha: 1 })
+  .from("#s3 .dot", { opacity: 0, duration: 0.01 })
+  .to("#s3 .dot", { opacity: 0, duration: 0.01, repeat: 3, yoyo: true, repeatDelay: 0.22 }, "+=0.2")
+  .from("#s3 .ch", { opacity: 0, duration: 0.01, stagger: 0.05, ease: "none" }, "+=0.3")
+  .from("#s3 .braces", { opacity: 0, y: RISE }, "+=0.25")
+  .from("#s3 .claim .w", { opacity: 0, y: RISE, stagger: 0.05 }, "<0.15")
+  .to(".diamond", { opacity: 0.35, duration: 0.6, stagger: { amount: 0.6, grid: "auto", from: "start" }, ease: "none" }, "<")
+  .to("#s3", { opacity: 0, duration: 0.22, ease: "power2.in" }, "+=1.6");
+
+/* 4. SERVICES — les cartes arrivent, puis chacune est sélectionnée à son tour */
+tl.addLabel("Services")
+  .call(setCount(4))
   .set("#s4", { autoAlpha: 1 })
-  .from("#tag .kicker", { autoAlpha: 0, x: -40, duration: 0.5 }, "+=0.15")
-  .from("#tag .claim .w", { yPercent: 60, autoAlpha: 0, duration: 0.5, stagger: 0.05 }, "<0.15");
-
-/* 4. SERVICES — le logo devient en-tête, les épreuves s'empilent */
-tl.addLabel("Services", "+=1.6")
-  .to("#s4", { autoAlpha: 0, y: 60, duration: 0.4, ease: "power2.in" }, "Services")
-  .to("#s3 .logo-wrap", { y: -470, scale: 0.42, transformOrigin: "0% 0%", duration: 0.85, ease: "power3.inOut" }, "Services")
-  .set("#s5", { autoAlpha: 1 });
+  .from(cards, { opacity: 0, y: RISE, stagger: 0.09 });
 
 cards.forEach((card, i) => {
-  const at = i === 0 ? "-=0.25" : "+=1.25";
-  tl.fromTo(
-    card,
-    { autoAlpha: 0, y: 420, rotation: i % 2 ? -5 : 5 },
-    { autoAlpha: 1, y: 0, rotation: (i % 2 ? -1 : 1) * 0.8, duration: 0.65, ease: "power4.out" },
-    at
-  )
-    .from(card.querySelector(".bar"), { scaleX: 0, transformOrigin: "0% 50%", duration: 0.5 }, "<0.25")
-    .from(card.querySelectorAll("p .w"), { y: 24, autoAlpha: 0, duration: 0.4, stagger: 0.035 }, "<0.05")
-    .from(card.querySelectorAll(".tags span"), { scale: 0.6, autoAlpha: 0, duration: 0.35, stagger: 0.06, ease: "back.out(2)" }, "<0.2");
-  // l'épreuve précédente recule dans la pile
+  const eyebrow = card.querySelector(".eyebrow");
+  const at = i === 0 ? "+=0.1" : "+=1.25";
+  tl.to(card, { borderColor: "#00ffe0", backgroundColor: "#141414", duration: 0.14, ease: "none" }, at)
+    .to(eyebrow, { color: "#00ffe0", duration: 0.14, ease: "none" }, "<")
+    .from(card.querySelector("p"), { opacity: 0.35, duration: 0.22 }, "<");
   if (i > 0) {
-    tl.to(cards.slice(0, i), { y: (j) => -(i - j) * 34, scale: (j) => 1 - (i - j) * 0.04, filter: "brightness(0.82)", duration: 0.6, ease: "power3.out" }, "<-0.55");
+    tl.to(cards[i - 1], { borderColor: "rgba(255,255,255,.10)", backgroundColor: "#101010", duration: 0.14, ease: "none" }, "<")
+      .to(cards[i - 1].querySelector(".eyebrow"), { color: "#7a7a7a", duration: 0.14, ease: "none" }, "<");
   }
 });
+tl.to("#s4", { opacity: 0, duration: 0.22, ease: "power2.in" }, "+=1.4");
 
-/* 5. CONTACT — la pile s'en va, la marque revient, l'adresse se souligne */
-tl.addLabel("Contact", "+=1.4")
-  .to(cards, { y: 1600, autoAlpha: 0, rotation: (i) => (i % 2 ? -8 : 8), duration: 0.7, stagger: { each: 0.06, from: "end" }, ease: "power3.in" }, "Contact")
-  .to("#s3 .logo-wrap", { y: -200, scale: 0.78, duration: 0.9, ease: "power3.inOut" }, "Contact+=0.35")
-  .set("#s6", { autoAlpha: 1 })
-  .from("#s6 .say .w", { yPercent: 70, autoAlpha: 0, duration: 0.55, stagger: 0.07 }, "-=0.3")
-  .from("#s6 .url", { autoAlpha: 0, y: 30, duration: 0.5 }, "-=0.2")
-  .from("#s6 .url .underline", { scaleX: 0, duration: 0.7, ease: "expo.out" }, "-=0.15")
-  .from("#s6 .list", { autoAlpha: 0, duration: 0.6 }, "-=0.3")
-  .to(".dot", { scale: 1.5, duration: 0.25, yoyo: true, repeat: 1, ease: "power2.inOut" }, "-=0.2")
-  .to({}, { duration: 2.6 }) // temps de lecture final
-  .to(stage, { autoAlpha: 0, duration: 0.5, ease: "power1.in" });
+/* 5. CONTACT — la marque revient, l'adresse s'écrit */
+tl.addLabel("Contact")
+  .call(setCount(5))
+  .set("#s5", { autoAlpha: 1 })
+  .to(".diamond", { opacity: 1, duration: 0.4, ease: "none" }, "<")
+  .from("#s5 .wordmark .ch, #s5 .wordmark .dot", { opacity: 0, duration: 0.01, stagger: 0.035, ease: "none" })
+  .from("#s5 .say .w", { opacity: 0, y: RISE, stagger: 0.07 }, "+=0.15")
+  .from("#s5 .url", { opacity: 0, y: RISE }, "+=0.1")
+  .from("#s5 .braces", { opacity: 0 }, "+=0.1")
+  .to({}, { duration: 3 }); // temps de lecture final
+
+// Filet de progression sur toute la durée
+tl.fromTo(".progress span", { scaleX: 0 }, { scaleX: 1, duration: tl.duration(), ease: "none" }, 0);
 
 /* ---------- Contrôles ---------- */
 
@@ -286,7 +261,7 @@ scrub.addEventListener("input", () => {
   syncUI();
 });
 
-Object.keys(tl.labels).forEach((name) => {
+SCENES.forEach((name) => {
   const b = document.createElement("button");
   b.type = "button";
   b.textContent = name;
@@ -306,7 +281,7 @@ document.addEventListener("keydown", (e) => {
 
 // Mouvement réduit : on affiche l'image finale, la lecture reste possible à la demande.
 if (!EXPORT && matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  tl.seek(tl.duration() - 0.6);
+  tl.seek(tl.duration() - 0.1);
   setPlaying(false);
   syncUI();
 } else {
