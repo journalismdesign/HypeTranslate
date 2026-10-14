@@ -745,7 +745,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .chat-name {
   display: flex; flex-direction: column; line-height: 1.2;
-  font-family: "Bricolage Grotesque", var(--font-display); font-weight: 800; font-size: 15px;
+  font-family: var(--font-display); font-weight: var(--weight-regular); font-size: 17px; letter-spacing: var(--track-display);
 }
 .chat-name small {
   font-family: var(--font-mono); font-weight: 400; font-size: var(--text-xxs);
@@ -842,3 +842,39 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* En clair, le cyan pur n'offre pas 3:1 sur fond clair : contours en encre cyan */
 [data-theme="light"] .chat-chip:not(.is-primary) { border-color: var(--synth-cyan-ink); }
 [data-theme="light"] .chat-chip.is-primary { border-color: var(--synth-cyan-ink); }
+
+/* ---------- Direction artistique de la messagerie ----------
+   Panneau clair dans les deux thèmes : fond #fcfcfc, bulles de question blanches,
+   réponses du lecteur en cyan Synth. */
+.chat {
+  --chat-bg: #fcfcfc;
+  --chat-bubble: #ffffff;
+  --chat-ink: #000000;
+  --chat-muted: #555555;
+  --chat-line: #e0e0e0;
+  --chat-accent-ink: #00332d;   /* encre cyan de la charte, lisible sur fond clair */
+  background: var(--chat-bg);
+  border-color: var(--chat-line);
+  color: var(--chat-ink);
+  color-scheme: light;
+}
+.chat-log { background: var(--chat-bg); }
+.chat-step { color: var(--chat-accent-ink); }
+.chat-bot .chat-bubble {
+  background: var(--chat-bubble); color: var(--chat-ink);
+  border-color: var(--chat-line);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .06);
+}
+.chat-bot .chat-bubble a { color: var(--chat-accent-ink); }
+.chat-bubble.is-typing::after { background: var(--chat-accent-ink); }
+.chat-bot .chat-typing { color: var(--chat-muted); }
+.chat-me .chat-bubble { background: var(--synth-cyan); border-color: var(--synth-cyan); color: #000; }
+.chat-me .chat-typing { color: #000; }
+.chat .chat-verdict.is-right { color: #157347; }
+.chat .chat-verdict.is-wrong { color: #b42318; }
+.chat-replies { background: var(--chat-bg); }
+.chat .chat-chip { color: var(--chat-ink); border-color: var(--chat-accent-ink); background: var(--chat-bubble); }
+.chat .chat-chip:hover { background: rgba(0, 255, 224, .12); }
+.chat .chat-chip.is-primary { background: var(--synth-cyan); border-color: var(--synth-cyan); color: #000; }
+.chat-avatar { border-color: var(--synth-cyan); }
+.chat-avatar img { display: block; }

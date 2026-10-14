@@ -45,7 +45,7 @@
   function uid(prefix) { return prefix + '-' + (++counter); }
 
   var chatData = {};
-  var EYE_SVG = '<svg width="20" height="16" viewBox="0 0 100 80" aria-hidden="true"><polygon points="2,38 35,6 70,10 98,40 68,50 48,74 34,52" fill="none" stroke="#00ffe0" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><circle cx="50" cy="32" r="13" fill="#00ffe0"/></svg>';
+  var EYE_SVG = '<img src="assets/mark-eye-cyan.png" alt="" width="22" height="14">';
 
   var handlers = {
     cartes: function (src, md) {

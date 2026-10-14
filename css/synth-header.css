@@ -1,6 +1,6 @@
 /*
  * Header Synth — modèle « Zéro Clics » (AI Overviews, la fin du clic).
- * Bandeau sombre fixe qui ne suit JAMAIS le thème, mot « Synth » évidé + œil cyan,
+ * Bandeau sombre fixe qui ne suit JAMAIS le thème, logo officiel Synth. (blanc + cyan),
  * étiquette de rubrique, bascule clair/sombre carrée, barre de lecture cyan en haut.
  * Comportement (js/synth-header.js) : fond flouté dès 8 px de défilement,
  * masqué en descendant au-delà de 140 px, réapparaît en remontant.
@@ -8,8 +8,6 @@
  * Variables à régler par projet :
  *   --sh-row-w   largeur de la ligne du header = largeur du contenu de la page
  */
-
-@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700..900&display=swap");
 
 :root {
   --sh-mast: #0a0a0a;      /* constante de marque : identique en clair et en sombre */
@@ -50,12 +48,7 @@ header.sh-site.hide { transform: translateY(-100%); }
 
 /* ---------- logo ---------- */
 .sh-logo { display: flex; align-items: center; gap: 7px; text-decoration: none; flex: none; }
-.sh-logo-word {
-  font-family: "Bricolage Grotesque", sans-serif;
-  font-weight: 900; font-size: 1.2rem; letter-spacing: .01em; line-height: 1;
-  color: transparent; -webkit-text-stroke: 1.1px var(--sh-mast-ink);
-}
-.sh-logo-eye { display: block; flex: none; }
+.sh-logo img { display: block; height: 24px; width: auto; } /* logo officiel du design system Synth. (version blanc + cyan) */
 
 /* ---------- rubrique ---------- */
 .sh-tag {
