@@ -906,41 +906,6 @@ Q: Pour un sujet sur une start-up de VTC, quelles sources le cours recommande-t-
 > Diversifier les sources, c'est aller chercher celles et ceux qui vivent la technologie en pratique, et qui dépendent le plus de ses défaillances.
 ```
 
-## Boîte à outils Synth
-
-*Exercices ajoutés par Synth, absents du cours original de la DW Akademie.*
-
-### Le hype-o-mètre
-
-Évaluez chaque titre de 0 (factuel) à 3 (hype pur), puis comparez avec notre lecture, fondée sur les notions du cours. Les titres sont fictifs, construits pour l'entraînement.
-
-```hypemetre
-Une IA écrit un roman en une nuit : les écrivains sont-ils condamnés ? :: 3 :: Prédiction grandiloquente et alarmisme : un cas isolé est généralisé à toute une profession, sur le mode de la catastrophe.
-Le gouvernement annonce un plan de 2 milliards d'euros pour l'intelligence artificielle :: 1 :: Fait vérifiable. À compléter en suivant l'argent : répartition, calendrier, montants réellement nouveaux, bénéficiaires.
-ChatGPT comprend désormais vos émotions :: 3 :: Anthropomorphisme et mot à la mode : le système classe des textes, il ne ressent ni ne comprend. Quelle définition opérationnelle de « comprendre » ?
-Des modérateurs kényans témoignent de leurs conditions de travail pour entraîner des IA :: 0 :: Récit documenté qui donne la parole aux acteurs invisibilisés du hype.
-L'IA va révolutionner l'éducation : les écoles qui n'agissent pas maintenant seront dépassées :: 3 :: Inéluctabilité, prédiction grandiloquente et fausse urgence (*kairos*) réunies.
-Une start-up quantique valorisée à 3 milliards sans chiffre d'affaires :: 2 :: Le titre donne un élément de contexte utile (pas de revenus), mais la valorisation reste une attente d'investisseurs, pas une preuve de valeur.
-Un outil de tri des CV écarte davantage les candidates, selon un audit indépendant :: 0 :: Dommage concret, source indépendante, périmètre précis.
-```
-
-### Check-list avant publication
-
-Cochez au fil de votre relecture. Vos cases restent enregistrées dans ce navigateur.
-
-- [ ] J'ai identifié qui fait l'affirmation, et ce que cette source gagne si on la croit.
-- [ ] Ma liste de sources ne surreprésente pas les personnes qui ont à gagner au succès de la technologie.
-- [ ] J'ai donné la parole à celles et ceux qui vivent la technologie en pratique, ou en subissent les effets.
-- [ ] J'ai suivi l'argent : qui finance, qui en profite, qui supporte les coûts si cela échoue.
-- [ ] Les voix critiques sont présentées par leur expertise réelle, pas comme de simples « critiques ».
-- [ ] Les mots à la mode sont définis en termes concrets et opérationnels.
-- [ ] L'urgence affichée est justifiée par des preuves, pas seulement par la peur de passer à côté.
-- [ ] Les prédictions sont signalées comme telles, avec ce qu'elles supposent pour se réaliser.
-- [ ] Les valorisations et levées de fonds sont comparées aux revenus et à l'impact démontré.
-- [ ] Les limites des études citées figurent dans l'article, pas seulement leurs conclusions.
-- [ ] J'ai vérifié comment des promesses semblables ont été couvertes par le passé, et ce qu'il en est advenu.
-- [ ] Le titre et le chapô ne promettent pas plus que l'article ne démontre.
-
 <!-- module: conclusion | Conclusion -->
 
 # Conclusion
@@ -956,6 +921,43 @@ Les journalistes jouent un rôle central pour décider quelles histoires prennen
 L'espace de la réflexion critique s'élargit dès lors que les journalistes, aussi simple que cela paraisse, font ce qu'ils savent faire de mieux : demander pourquoi. Demander pourquoi, c'est regarder derrière le rideau des déclarations fracassantes, interroger la position d'où parlent les personnalités brillantes, révéler les intérêts de pouvoir, de vitesse et d'argent, et montrer ce qui se passe quand l'attention éclaire certains aspects et en laisse d'autres dans l'ombre.
 
 Au bout du compte, développer une littératie du hype, c'est renforcer la responsabilité démocratique. Elle aide les sociétés à comprendre comment se négocient les futurs technologiques, et quels intérêts dominent cette négociation. En rendant visibles les mécanismes du hype, les journalistes peuvent favoriser des façons d'imaginer l'avenir plus inclusives, plus plurielles et mieux fondées sur les preuves. Le hype ne disparaîtra pas, mais il peut être contextualisé, interrogé et soumis à l'obligation de rendre des comptes. Et cela change profondément la manière dont les sociétés choisissent les voies technologiques qui façonnent leurs réalités sociales.
+
+<!-- module: boite-a-outils | Boîte à outils Synth -->
+
+# Boîte à outils Synth
+
+*Exercices ajoutés par Synth, absents du cours original de la DW Akademie. Ils mettent en pratique les notions des cinq chapitres.*
+
+## Le hype-o-mètre
+
+Évaluez chaque titre de 0 (factuel) à 3 (hype pur), puis comparez avec notre lecture, fondée sur les notions du cours. Les titres sont fictifs, construits pour l'entraînement.
+
+```hypemetre
+Une IA écrit un roman en une nuit : les écrivains sont-ils condamnés ? :: 3 :: Prédiction grandiloquente et alarmisme : un cas isolé est généralisé à toute une profession, sur le mode de la catastrophe.
+Le gouvernement annonce un plan de 2 milliards d'euros pour l'intelligence artificielle :: 1 :: Fait vérifiable. À compléter en suivant l'argent : répartition, calendrier, montants réellement nouveaux, bénéficiaires.
+ChatGPT comprend désormais vos émotions :: 3 :: Anthropomorphisme et mot à la mode : le système classe des textes, il ne ressent ni ne comprend. Quelle définition opérationnelle de « comprendre » ?
+Des modérateurs kényans témoignent de leurs conditions de travail pour entraîner des IA :: 0 :: Récit documenté qui donne la parole aux acteurs invisibilisés du hype.
+L'IA va révolutionner l'éducation : les écoles qui n'agissent pas maintenant seront dépassées :: 3 :: Inéluctabilité, prédiction grandiloquente et fausse urgence (*kairos*) réunies.
+Une start-up quantique valorisée à 3 milliards sans chiffre d'affaires :: 2 :: Le titre donne un élément de contexte utile (pas de revenus), mais la valorisation reste une attente d'investisseurs, pas une preuve de valeur.
+Un outil de tri des CV écarte davantage les candidates, selon un audit indépendant :: 0 :: Dommage concret, source indépendante, périmètre précis.
+```
+
+## Check-list avant publication
+
+Cochez au fil de votre relecture. Vos cases restent enregistrées dans ce navigateur.
+
+- [ ] J'ai identifié qui fait l'affirmation, et ce que cette source gagne si on la croit.
+- [ ] Ma liste de sources ne surreprésente pas les personnes qui ont à gagner au succès de la technologie.
+- [ ] J'ai donné la parole à celles et ceux qui vivent la technologie en pratique, ou en subissent les effets.
+- [ ] J'ai suivi l'argent : qui finance, qui en profite, qui supporte les coûts si cela échoue.
+- [ ] Les voix critiques sont présentées par leur expertise réelle, pas comme de simples « critiques ».
+- [ ] Les mots à la mode sont définis en termes concrets et opérationnels.
+- [ ] L'urgence affichée est justifiée par des preuves, pas seulement par la peur de passer à côté.
+- [ ] Les prédictions sont signalées comme telles, avec ce qu'elles supposent pour se réaliser.
+- [ ] Les valorisations et levées de fonds sont comparées aux revenus et à l'impact démontré.
+- [ ] Les limites des études citées figurent dans l'article, pas seulement leurs conclusions.
+- [ ] J'ai vérifié comment des promesses semblables ont été couvertes par le passé, et ce qu'il en est advenu.
+- [ ] Le titre et le chapô ne promettent pas plus que l'article ne démontre.
 
 <!-- module: references | Références et ressources -->
 

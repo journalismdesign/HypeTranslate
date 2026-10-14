@@ -685,7 +685,7 @@
 
   // Modules comptés dans la progression : les chapitres et la conclusion.
   function countable() {
-    return modules.filter(function (m) { return ['accueil', 'references', 'mentions'].indexOf(m.id) === -1; });
+    return modules.filter(function (m) { return ['accueil', 'boite-a-outils', 'references', 'mentions'].indexOf(m.id) === -1; });
   }
 
   /* ---------- Rendu ---------- */

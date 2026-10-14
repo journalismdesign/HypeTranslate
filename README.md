@@ -33,7 +33,7 @@ Tout se passe dans `contenu/hype-literacy.fr.md`. La syntaxe des chapitres et de
 (vue d'ensemble, images, galeries, carrousel, vidéos, encadrés, citations, cartes,
 accordéon, tri, paquet de cartes, questions à se poser, quiz, image annotée, tableaux) est décrite en tête du fichier.
 
-Les quiz de fin de chapitre, le hype-o-mètre et la check-list (fin du chapitre 5) sont
+Les quiz de fin de chapitre et la « Boîte à outils Synth » (hype-o-mètre, check-list) sont
 des ajouts de Synth, signalés comme tels dans le parcours : ils ne figurent ni dans le
 cours en ligne ni dans son export PDF.
 
