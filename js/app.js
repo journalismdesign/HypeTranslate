@@ -197,7 +197,8 @@
 
     section: function (src) {
       var n = parseInt(src, 10) || 0;
-      return '<div class="section-num" aria-hidden="true"><span>' + (n < 10 ? '0' : '') + n + '</span></div>';
+      return '<div class="section-num" aria-hidden="true"><span class="sn-label">Partie</span>' +
+        '<span class="sn-num"><span>' + (n < 10 ? '0' : '') + n + '</span></span></div>';
     },
 
     note: function (src, md) {
@@ -744,7 +745,25 @@
       '</nav>';
 
     main.innerHTML = html;
+    // Direction artistique « affiche » : ouverture, rails de marge, révélations au défilement
+    if (window.Atelier) {
+      var chapters = modules.filter(function (m) { return /^chapitre-/.test(m.id); });
+      var chNum = (mod.id.match(/^chapitre-(\d+)/) || [])[1];
+      var article = main.querySelector('.module');
+      Atelier.chapterHero(article, {
+        chapter: chNum ? +chNum : 0,
+        total: chapters.length,
+        kicker: chNum ? 'Chapitre' : 'Littératie du hype'
+      });
+      Atelier.rails(main, [
+        chNum ? 'Chapitre ' + (chNum < 10 ? '0' : '') + chNum + ' / ' + (chapters.length < 10 ? '0' : '') + chapters.length : mod.title,
+        'Littératie du hype',
+        mod.title,
+        'Synth.'
+      ]);
+    }
     bindInteractions(main, mod.id);
+    if (window.Atelier) Atelier.reveals(main.querySelector('.module'));
     renderToc(mod.id);
     renderProgress();
     document.title = (mod.id === 'accueil' ? '' : mod.title + ' — ') + 'Littératie du hype — Synth';

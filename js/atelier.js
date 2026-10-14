@@ -14,6 +14,7 @@
   try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
   var animate = hasGsap && !reduce;
   if (hasGsap && window.Draggable) gsap.registerPlugin(Draggable);
+  if (hasGsap && window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
 
   function shuffle(list) {
     for (var i = list.length - 1; i > 0; i--) {
@@ -409,5 +410,121 @@
     }
   }
 
-  window.Atelier = { overview: overview, deck: deck, questions: questions };
+
+  /* =================================================================
+     Direction artistique « affiche » : ouverture de chapitre, rails, parties
+     ================================================================= */
+
+  // Découpe un titre en mots masqués, pour les faire monter depuis leur ligne de base.
+  function maskWords(text) {
+    return text.split(/\s+/).filter(Boolean).map(function (w) {
+      return '<span class="mw"><span>' + escapeHtml(w) + '</span></span>';
+    }).join(' ');
+  }
+
+  function facts(article) {
+    var words = (article.textContent || '').split(/\s+/).length;
+    var parts = article.querySelectorAll('.section-num').length;
+    var chats = article.querySelectorAll('.chat');
+    var questions = 0;
+    chats.forEach(function (c) { var m = (c.querySelector('.chat-name small') || {}).textContent; questions += parseInt(m, 10) || 0; });
+    var tools = [];
+    if (article.querySelector('.deck')) tools.push('Paquet de cartes');
+    if (article.querySelector('.qcard')) tools.push('Carnet');
+    if (article.querySelector('.labeled')) tools.push('Image annotée');
+    if (article.querySelector('.cards')) tools.push('Cartes');
+    if (article.querySelector('.carousel')) tools.push('Carrousel');
+    if (article.querySelector('.video')) tools.push('Vidéo');
+    var list = [['Lecture', '~' + Math.max(1, Math.round(words / 200)) + ' min']];
+    if (parts) list.push(['Parties', String(parts)]);
+    if (questions) list.push(['Quiz', questions + ' questions']);
+    if (tools.length) list.push(['À manipuler', tools.slice(0, 2).join(' · ')]);
+    return list;
+  }
+
+  // Transforme le premier titre du module en ouverture « affiche ».
+  function chapterHero(article, info) {
+    var h1 = article.querySelector(':scope > h1');
+    if (!h1 || article.querySelector('.hero')) return;
+    var raw = h1.textContent.trim();
+    var kicker = info.kicker || '';
+    var title = raw;
+    var m = raw.match(/^Chapitre\s+\d+\s*:\s*(.*)$/);
+    if (m) title = m[1];
+    var head = document.createElement('header');
+    head.className = 'ch-hero';
+    var fl = info.chapter ? facts(article) : [];
+    head.innerHTML =
+      '<p class="ch-kicker"><span>' + escapeHtml(kicker) + '</span>' +
+      (info.chapter ? '<span>' + pad(info.chapter) + ' / ' + pad(info.total) + '</span>' : '') + '</p>' +
+      '<h1 class="ch-title">' + maskWords(title) + '</h1>' +
+      (fl.length ? '<dl class="ch-facts">' + fl.map(function (f) {
+        return '<div><dt>' + f[0] + '</dt><dd>' + escapeHtml(f[1]) + '</dd></div>';
+      }).join('') + '</dl>' : '');
+    h1.replaceWith(head);
+    if (animate) {
+      gsap.from(head.querySelectorAll('.mw > span'), { yPercent: 110, duration: .9, stagger: .06, ease: 'power4.out' });
+      gsap.from(head.querySelectorAll('.ch-kicker, .ch-facts > div'), { opacity: 0, y: 10, duration: .5, stagger: .06, delay: .35 });
+    }
+  }
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+  // Rails verticaux dans les marges, avec micro-légendes tournées.
+  var railObserver = null;
+  function rails(main, labels) {
+    main.querySelectorAll('.page-rail').forEach(function (r) { r.remove(); });
+    if (railObserver) { railObserver.disconnect(); railObserver = null; }
+    var left = document.createElement('div');
+    var right = document.createElement('div');
+    left.className = 'page-rail page-rail-left';
+    right.className = 'page-rail page-rail-right';
+    left.setAttribute('aria-hidden', 'true');
+    right.setAttribute('aria-hidden', 'true');
+    main.appendChild(left);
+    main.appendChild(right);
+    function fill() {
+      // Les rails commencent sous l'ouverture du module (bandeau noir).
+      var hero = main.querySelector('.ch-hero, .hero');
+      var top = hero ? hero.offsetTop + hero.offsetHeight : 0;
+      left.style.top = right.style.top = top + 'px';
+      var h = main.scrollHeight - top;
+      var step = 560;
+      var n = Math.max(1, Math.floor((h - 200) / step));
+      [left, right].forEach(function (rail, side) {
+        var html = '';
+        for (var i = 0; i < n; i++) {
+          var label = labels[(i + side) % labels.length];
+          html += '<span style="top:' + (140 + i * step) + 'px">' + escapeHtml(label) + '</span>';
+        }
+        rail.innerHTML = html;
+      });
+    }
+    fill();
+    if ('ResizeObserver' in window) {
+      var last = main.scrollHeight;
+      railObserver = new ResizeObserver(function () {
+        if (Math.abs(main.scrollHeight - last) > 200) { last = main.scrollHeight; fill(); }
+      });
+      railObserver.observe(main);
+    }
+  }
+
+  // Numéros de partie et grands titres : montée depuis la ligne de masque au défilement.
+  function reveals(article) {
+    if (!animate || !window.ScrollTrigger) return;
+    ScrollTrigger.getAll().forEach(function (t) { t.kill(); });
+    article.querySelectorAll('.sn-num > span').forEach(function (el) {
+      gsap.from(el, { yPercent: 105, duration: 1, ease: 'power4.out', scrollTrigger: { trigger: el.parentNode, start: 'top 85%' } });
+    });
+    article.querySelectorAll('.sn-num').forEach(function (el) {
+      gsap.fromTo(el, { skewX: -8 }, { skewX: 0, ease: 'none', scrollTrigger: { trigger: el, start: 'top 90%', end: 'top 40%', scrub: true } });
+    });
+    article.querySelectorAll(':scope > h2').forEach(function (h) {
+      gsap.from(h, { y: 26, opacity: 0, duration: .7, ease: 'power3.out', scrollTrigger: { trigger: h, start: 'top 88%' } });
+    });
+    setTimeout(function () { ScrollTrigger.refresh(); }, 400);
+  }
+
+  window.Atelier = { overview: overview, deck: deck, questions: questions, chapterHero: chapterHero, rails: rails, reveals: reveals };
 })();
