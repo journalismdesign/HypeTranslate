@@ -16,7 +16,10 @@ index.html                    squelette de la page (aucun texte éditorial)
 css/style.css                 habillage, construit sur les jetons du design system Synth.
 css/synth/                    jetons copiés du design system « Synth. » (Claude Design) + @font-face
 js/markdown.js                mini-convertisseur Markdown, sans dépendance
-js/app.js                     découpage en modules, navigation, exercices, progression
+js/app.js                     découpage en modules, navigation, quiz en conversation, progression
+js/atelier.js                 dispositifs animés : vue d'ensemble, paquet de cartes, carnet de questions
+js/vendor/                    GSAP 3 et Draggable (licence GSAP gratuite)
+js/synth-header.js, css/synth-header.css   header Synth (modèle Zéro Clics)
 contenu/hype-literacy.fr.md   TOUS les textes du parcours (traduction française)
 source/hype-literacy.en.md    texte original anglais, extrait automatiquement, même format
 outils/rise2md.py             extraction du cours Articulate Rise -> Markdown + médias
@@ -27,8 +30,8 @@ assets/                       logos Synth., œil, motif diamant, polices (Coolve
 ## Modifier les textes
 
 Tout se passe dans `contenu/hype-literacy.fr.md`. La syntaxe des chapitres et des blocs
-(images, galeries, carrousel, vidéos, encadrés, citations, cartes, accordéon, tri,
-image annotée, tableaux) est décrite en tête du fichier.
+(vue d'ensemble, images, galeries, carrousel, vidéos, encadrés, citations, cartes,
+accordéon, tri, paquet de cartes, questions à se poser, quiz, image annotée, tableaux) est décrite en tête du fichier.
 
 Les quiz de fin de chapitre, le hype-o-mètre et la check-list (fin du chapitre 5) sont
 des ajouts de Synth, signalés comme tels dans le parcours : ils ne figurent ni dans le

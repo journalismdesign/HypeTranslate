@@ -13,6 +13,7 @@
   - Markdown standard : titres, paragraphes, listes, liens, tableaux (| a | b |).
   - Blocs spéciaux (blocs de code nommés) :
       section        numéro de section (séparateur numéroté)
+      vue-ensemble   texte d'introduction (markdown), puis « objectifs: phrase » et une liste « - objectif »
       image          chemin :: légende
       galerie        une image par ligne : chemin :: légende (grille)
       carrousel      même syntaxe que galerie, une image à la fois
@@ -22,6 +23,8 @@
       cartes         une carte par ligne : Recto :: Verso
       accordeon      « + Titre » puis le contenu (markdown) jusqu'au titre suivant
       tri            une catégorie par ligne : Catégorie :: élément | élément | …
+      paquet         « + Tas :: carte | carte | … », puis la parade (markdown) et « ? question » à poser
+      questions      « source: titre », puis une question par ligne (ajoutables au carnet)
       quiz           titre: … (bandeau de la messagerie), puis
                      Q: question / - [ ] mauvaise réponse / - [x] bonne réponse / > explication
                      (plusieurs questions séparées par une ligne vide)
@@ -64,7 +67,7 @@ Ce cours modulaire a été créé par trois membres de ce collectif.
 **Note sur cette version.** Traduction française du cours *The Hype Literacy Toolkit for Journalists*, publié en mars 2026 par la [DW Akademie](https://akademie.dw.de/hype-literacy/) en collaboration avec le groupe Hype Studies, avec le soutien du ministère fédéral allemand de la Coopération économique et du Développement. Les citations d'ouvrages en langue étrangère sont des traductions libres, sauf mention contraire. Les titres et slogans visibles sur les images sont laissés dans leur langue d'origine.
 ```
 
-<!-- module: chapitre-1 | 1. Comprendre ce qu'est le hype (et ce qu'il n'est pas) -->
+<!-- module: chapitre-1 | Comprendre ce qu'est le hype (et ce qu'il n'est pas) -->
 
 # Chapitre 1 : Comprendre ce qu'est le hype (et ce qu'il n'est pas)
 
@@ -305,17 +308,18 @@ Q: Laquelle de ces notions désigne une période où le prix d'un actif dépasse
 > Une bulle n'est souvent identifiable qu'après coup, une fois qu'elle a éclaté. Le hype, lui, est une dynamique sociale plus large : il peut alimenter une bulle sans s'y réduire.
 ```
 
-<!-- module: chapitre-2 | 2. Le hype des technologies prometteuses -->
+<!-- module: chapitre-2 | Le hype des technologies prometteuses -->
 
 # Chapitre 2 : Le hype des technologies prometteuses
 
-## Vue d'ensemble
+```vue-ensemble
+La couverture des technologies présente souvent l'innovation comme un progrès inéluctable, mais le hype opère par des mécanismes culturels et politiques plus profonds. Les journalistes doivent comprendre comment et pourquoi les récits de promesse qui entourent les nouvelles technologies façonnent l'imaginaire collectif et transforment la spéculation en obligation. Ce chapitre vous donne des cadres d'analyse pour reconnaître l'enchantement technologique, décoder la rhétorique de la promesse et vous demander quels futurs on est en train de vendre.
 
-La couverture des technologies présente souvent l'innovation comme un progrès inéluctable, mais le hype opère par des mécanismes culturels et politiques plus profonds. Les journalistes doivent comprendre comment et pourquoi les récits de promesse qui entourent les nouvelles technologies façonnent l'imaginaire collectif et transforment la spéculation en obligation. Ce chapitre vous donne des cadres d'analyse pour reconnaître l'enchantement technologique, décoder la rhétorique de la promesse et vous demander quels futurs on est en train de vendre. À la fin de ce chapitre, vous serez capable de :
-
-- comprendre comment les promesses créent une dynamique sociale autour de technologies incertaines ;
-- reconnaître les schémas de l'enchantement technologique et les récits de « saut technologique » (*leapfrogging*) ;
-- identifier le cycle promesse-exigence qui transforme la spéculation en obligation.
+objectifs: À la fin de ce chapitre, vous serez capable de :
+- comprendre comment les promesses créent une dynamique sociale autour de technologies incertaines
+- reconnaître les schémas de l'enchantement technologique et les récits de « saut technologique » (*leapfrogging*)
+- identifier le cycle promesse-exigence qui transforme la spéculation en obligation
+```
 
 ```section
 1
@@ -420,21 +424,20 @@ Q: Que décrit l'effet de verrouillage (*lock-in*) dans ce chapitre ?
 > Les promesses deviennent des attentes, puis des exigences. Les journalistes peuvent accroître ou réduire cette pression, selon qu'ils relaient sans recul ou qu'ils éclairent les coûts et les risques.
 ```
 
-<!-- module: chapitre-3 | 3. La politique du hype -->
+<!-- module: chapitre-3 | La politique du hype -->
 
 # Chapitre 3 : La politique du hype
 
-## Vue d'ensemble
-
+```vue-ensemble
 Le hype n'est jamais neutre : il concentre le pouvoir, façonne les agendas et marginalise les futurs alternatifs. Comprendre le hype comme une force politique, c'est voir comment il fonctionne comme mode de gouvernance, détermine quelles voix comptent, et quel rôle il joue dans une économie fondée sur le risque et la dette.
 
 Ce chapitre propose des cadres pour analyser les rapports de pouvoir derrière les récits technologiques et identifier les intérêts servis.
 
-À la fin de ce chapitre, vous serez capable de :
-
-- reconnaître le hype comme un mécanisme de pouvoir et de gouvernance ;
-- identifier les acteurs qui produisent le hype, l'amplifient et en profitent ;
-- vous demander quels futurs sont rendus visibles et lesquels restent cachés.
+objectifs: À la fin de ce chapitre, vous serez capable de :
+- reconnaître le hype comme un mécanisme de pouvoir et de gouvernance
+- identifier les acteurs qui produisent le hype, l'amplifient et en profitent
+- vous demander quels futurs sont rendus visibles et lesquels restent cachés
+```
 
 ```section
 1
@@ -585,18 +588,19 @@ Q: Qui sont les « acteurs invisibilisés » du hype ?
 > Ils sont concernés au premier chef par les technologies en vogue, mais presque absents des récits. Le cours y voit la reproduction de dynamiques coloniales.
 ```
 
-<!-- module: chapitre-4 | 4. Quand les journalistes amplifient le hype -->
+<!-- module: chapitre-4 | Quand les journalistes amplifient le hype -->
 
 # Chapitre 4 : Quand les journalistes amplifient le hype
 
-## Vue d'ensemble
+```vue-ensemble
+Le journalisme n'existe pas en vase clos : il fonctionne au sein de systèmes qui peuvent, sans le vouloir, amplifier le hype au lieu de l'examiner. La pression du temps, le manque de moyens et les incitations institutionnelles créent des vulnérabilités prévisibles, que des acteurs rodés savent exploiter. Ce chapitre examine comment les réalités des rédactions, les stratégies de relations publiques et la nature même de la production de l'information peuvent transformer les journalistes en porte-voix d'affirmations exagérées.
 
-Le journalisme n'existe pas en vase clos : il fonctionne au sein de systèmes qui peuvent, sans le vouloir, amplifier le hype au lieu de l'examiner. La pression du temps, le manque de moyens et les incitations institutionnelles créent des vulnérabilités prévisibles, que des acteurs rodés savent exploiter. Ce chapitre examine comment les réalités des rédactions, les stratégies de relations publiques et la nature même de la production de l'information peuvent transformer les journalistes en porte-voix d'affirmations exagérées. À la fin de ce chapitre, vous serez capable de :
-
-- reconnaître les pressions structurelles qui rendent les journalistes vulnérables au hype ;
-- identifier comment les RP et le lobbying fabriquent des récits « dignes d'intérêt » ;
-- comprendre pourquoi l'incertitude scientifique se déforme en passant dans les médias ;
-- repérer les spirales d'amplification avant d'y être entraîné.
+objectifs: À la fin de ce chapitre, vous serez capable de :
+- reconnaître les pressions structurelles qui rendent les journalistes vulnérables au hype
+- identifier comment les RP et le lobbying fabriquent des récits « dignes d'intérêt »
+- comprendre pourquoi l'incertitude scientifique se déforme en passant dans les médias
+- repérer les spirales d'amplification avant d'y être entraîné
+```
 
 ```section
 1
@@ -725,19 +729,18 @@ Q: Quelle partie des articles scientifiques disparaît souvent des communiqués 
 > Les chercheurs y précisent la population étudiée, la taille des effets et les incertitudes. Sans elle, une faible corrélation devient « une étude montre que… ».
 ```
 
-<!-- module: chapitre-5 | 5. Comment couvrir le hype -->
+<!-- module: chapitre-5 | Comment couvrir le hype -->
 
 # Chapitre 5 : Comment couvrir le hype
 
-## Vue d'ensemble
-
+```vue-ensemble
 Le journalisme technologique est souvent façonné autant par la persuasion que par les faits. Les journalistes doivent composer avec des affirmations qui exagèrent l'impact, gomment l'incertitude ou promettent un changement inéluctable. Ce chapitre vous donne des outils pratiques pour repérer le hype, vérifier les affirmations spéculatives et apporter du contexte.
 
-À la fin de ce chapitre, vous serez capable de :
-
-- identifier les pièges rhétoriques de la couverture des technologies ;
-- dépasser le hype dans votre travail ;
-- poser de meilleures questions tout au long du processus.
+objectifs: À la fin de ce chapitre, vous serez capable de :
+- identifier les pièges rhétoriques de la couverture des technologies
+- dépasser le hype dans votre travail
+- poser de meilleures questions tout au long du processus
+```
 
 ```section
 1
@@ -745,62 +748,43 @@ Le journalisme technologique est souvent façonné autant par la persuasion que 
 
 ## Les pièges rhétoriques
 
-Malgré l'aura de froide rationalité de la technologie, le hype est *explicitement émotionnel*. Les histoires racontées doivent toucher les gens pour être crues et suivies d'effet. Pour y parvenir, le hype recourt à un certain nombre de procédés et d'outils rhétoriques. Classez chaque formule dans la bonne catégorie :
+Malgré l'aura de froide rationalité de la technologie, le hype est *explicitement émotionnel*. Les histoires racontées doivent toucher les gens pour être crues et suivies d'effet. Pour y parvenir, le hype recourt à un certain nombre de procédés et d'outils rhétoriques.
 
-```tri
-Mots à la mode :: 5G | Métavers | Intelligence artificielle | Futur du travail
-Fausse urgence et peur de passer à côté :: « agissez maintenant » | « avant qu'il ne soit trop tard » | « ne prenez pas le risque d'être laissé de côté »
-Prédictions grandiloquentes :: « révolutionnaire » | « qui change la donne » | « disruptif » | « changement de paradigme »
-Valorisations et hype de l'investissement :: « start-up licorne » | « marché à un milliard de dollars » | « croissance explosive »
-```
+Distribuez le paquet : retournez chaque carte et posez-la sur l'un des quatre tas. Un tas complet se retourne et révèle la parade, avec les questions à poser, que vous pouvez glisser dans votre carnet.
 
-### Comment déjouer ces pièges rhétoriques
-
-```accordeon
-+ Mots à la mode
+```paquet
++ Mots à la mode :: 5G | Métavers | Intelligence artificielle | Futur du travail
 Les mots à la mode (*buzzwords*) sont des raccourcis pour désigner des domaines technologiques complexes, qu'ils simplifient sous un nom accrocheur. Ils peuvent naître de termes au sens précis dans un jargon spécialisé, puis devenir à la mode chez les non-spécialistes, en perdant au passage leur sens précis.
 
 Les mots à la mode ont une fonction promotionnelle : ils condensent l'incertitude dans une étiquette assurée, qui sous-entend progrès et inéluctabilité. Leur flou permet à de nombreux acteurs (entreprises, investisseurs, décideurs) de projeter leurs propres espoirs ou intérêts sur un même mot. Cette élasticité en fait de puissants outils de persuasion et de hype.
+? Que veut dire concrètement la personne qui emploie ce terme, en termes opérationnels ? En cas de doute, demandez-lui de préciser.
+? Le terme a-t-il le même sens dans les documents de politique publique, la recherche universitaire et les communiqués de presse ? Sinon, qu'est-ce qui pourrait expliquer ces différences ?
 
-**Questions à poser :**
-
-- Que veut dire concrètement la personne qui emploie ce terme, en termes opérationnels ? En cas de doute, demandez-lui de préciser.
-- Le terme a-t-il le même sens dans les documents de politique publique, la recherche universitaire et les communiqués de presse ? Sinon, qu'est-ce qui pourrait expliquer ces différences ?
-
-+ Fausse urgence et peur de passer à côté
++ Fausse urgence et peur de passer à côté :: « agissez maintenant » | « avant qu'il ne soit trop tard » | « ne prenez pas le risque d'être laissé de côté »
 Le délai pour adopter une nouveauté technologique ou y réagir est explicitement présenté comme court, et le temps comme compté. Ce cadrage fait passer l'hésitation pour un risque et l'adhésion pour un choix intelligent ou visionnaire.
 
 Dans certains cas, comme l'IA ou l'exploration spatiale, le développement technologique est présenté comme une course entre nations, alors même que l'objectif concret reste souvent insaisissable.
+? Qui définit cette « fenêtre d'opportunité », et qui gagne à ce que les autres se précipitent ?
+? Que se passe-t-il si l'on attend ? Quelles preuves montrent que l'urgence est justifiée ?
+? Comment l'histoire change-t-elle si l'on traite la même évolution comme un processus de long terme plutôt que comme une occasion fugace ?
 
-**Questions à poser :**
-
-- Qui définit cette « fenêtre d'opportunité », et qui gagne à ce que les autres se précipitent ?
-- Que se passe-t-il si l'on attend ? Quelles preuves montrent que l'urgence est justifiée ?
-- Comment l'histoire change-t-elle si l'on traite la même évolution comme un processus de long terme plutôt que comme une occasion fugace ?
-
-+ Prédictions grandiloquentes
++ Prédictions grandiloquentes :: « révolutionnaire » | « qui change la donne » | « disruptif » | « changement de paradigme »
 Le journalisme technologique amplifie souvent l'idée qu'un nouveau produit, algorithme ou plateforme va transformer des industries entières, voire la vie humaine elle-même. Ces affirmations donnent le sentiment que nous sommes au bord d'une transformation inéluctable.
 
 Ce langage réduit la complexité à un spectacle. Il passe sous silence les progrès graduels, l'incertitude et la continuité avec les évolutions antérieures. Les grands récits du progrès ont aussi tendance à placer au centre les inventeurs et les investisseurs, en effaçant les contextes sociaux, humains et environnementaux qui rendent le changement technologique possible.
+? Qu'est-ce qui rend exactement cette technologie « révolutionnaire » ? Par rapport à quelle référence ?
+? Qui en profite, qui en supporte les coûts, et qui est exclu du « jeu » dont on change la donne ?
+? Des prédictions semblables ont-elles déjà été faites ? Que s'est-il réellement passé ?
 
-**Questions à poser :**
-
-- Qu'est-ce qui rend exactement cette technologie « révolutionnaire » ? Par rapport à quelle référence ?
-- Qui en profite, qui en supporte les coûts, et qui est exclu du « jeu » dont on change la donne ?
-- Des prédictions semblables ont-elles déjà été faites ? Que s'est-il réellement passé ?
-
-+ Valorisations et hype de l'investissement
++ Valorisations et hype de l'investissement :: « start-up licorne » | « marché à un milliard de dollars » | « croissance explosive »
 Les annonces d'investissement, les levées de fonds et les projections de marché sont présentées comme la preuve de la valeur ou du caractère inéluctable d'une technologie. Les valorisations élevées et l'intérêt du capital-risque deviennent des signaux qui s'auto-renforcent : la couverture médiatique attire les investisseurs, l'investissement attire davantage de couverture, et les deux suscitent dans le public un enthousiasme qui peut entraîner de nouveaux investissements.
 
 Le capital-risque est une catégorie d'investissement à haut risque. Autrement dit, même si les grosses levées de fonds sont présentées comme des réussites, elles sont surtout une obligation : cet argent devra un jour rapporter.
 
 En outre, ce qui est financé n'est pas toujours ce qui fonctionne le mieux, mais ce qui correspond aux récits d'investissement du moment.
-
-**Questions à poser :**
-
-- Comment la valorisation annoncée se compare-t-elle au chiffre d'affaires, au nombre d'utilisateurs ou à l'impact démontré ? Que faudrait-il pour que cette valorisation soit justifiée ?
-- Les projections financières reposent-elles sur des modèles économiques éprouvés, ou supposent-elles des changements de comportement, des autorisations réglementaires ou des percées technologiques qui n'ont pas encore eu lieu ?
-- Combien d'entreprises de ce secteur, présentées avant elle comme « révolutionnaires », n'ont pas tenu des promesses semblables ?
+? Comment la valorisation annoncée se compare-t-elle au chiffre d'affaires, au nombre d'utilisateurs ou à l'impact démontré ? Que faudrait-il pour que cette valorisation soit justifiée ?
+? Les projections financières reposent-elles sur des modèles économiques éprouvés, ou supposent-elles des changements de comportement, des autorisations réglementaires ou des percées technologiques qui n'ont pas encore eu lieu ?
+? Combien d'entreprises de ce secteur, présentées avant elle comme « révolutionnaires », n'ont pas tenu des promesses semblables ?
 ```
 
 ```section
@@ -815,32 +799,35 @@ Les fondateurs, les investisseurs, les développeurs ou les chercheurs sont souv
 
 Allez chercher les personnes qui vivent les technologies en pratique, pas seulement celles qui les conçoivent ou les financent : des travailleurs, des utilisateurs finaux, des populations transformées par le déploiement de la technologie. Par exemple, pour un sujet sur une start-up de VTC, interrogez non seulement les fondateurs ou les investisseurs, mais aussi les chauffeurs, les syndicats de taxis locaux et des passagers de milieux socio-économiques différents.
 
-**Questions à poser :**
-
-- Ma liste de sources surreprésente-t-elle des personnes qui ont à gagner au succès de la technologie ?
-- Qui est absent de cette histoire ? Le travail ou la vie de qui rendent cette technologie possible tout en restant invisibles ?
-- Qui en dépend le plus, et qui est le plus exposé à ses défaillances ?
+```questions
+source: Diversifier les sources
+Ma liste de sources surreprésente-t-elle des personnes qui ont à gagner au succès de la technologie ?
+Qui est absent de cette histoire ? Le travail ou la vie de qui rendent cette technologie possible tout en restant invisibles ?
+Qui en dépend le plus, et qui est le plus exposé à ses défaillances ?
+```
 
 ### Aller au-delà de l'expérience à la première personne
 
 Le reportage à la première personne peut faire comprendre ce que l'on ressent en utilisant une technologie. Mais il reflète souvent l'expérience des utilisateurs visés ou idéaux de ces technologies : en général, des personnes qui y ont accès, qui savent s'en servir et à qui le produit convient. Pour équilibrer, allez chercher celles dont le point de vue révèle les limites ou les exclusions de la conception.
 
-**Questions à poser :**
-
-- Mon expérience personnelle reflète-t-elle celle de l'utilisateur moyen ?
-- Qui ne peut pas accéder à cette technologie ou se l'offrir, tout en pouvant en subir les effets ?
-- Qui entretient ou fait fonctionner l'infrastructure qui rend possible ma propre expérience ?
+```questions
+source: Aller au-delà de l'expérience à la première personne
+Mon expérience personnelle reflète-t-elle celle de l'utilisateur moyen ?
+Qui ne peut pas accéder à cette technologie ou se l'offrir, tout en pouvant en subir les effets ?
+Qui entretient ou fait fonctionner l'infrastructure qui rend possible ma propre expérience ?
+```
 
 ### Suivre l'argent
 
 Les journalistes devraient regarder au-delà de l'entreprise à la une ou du fondateur charismatique, et examiner l'écosystème économique qui rend une technologie viable : qui en tire profit aux différentes étapes, qui en absorbe les risques, et qui fournit le travail, souvent négligé, qui fait tenir le système. Dans le cas de l'IA, cela peut vouloir dire s'intéresser à l'annotation des données, à la consommation d'énergie, aux chaînes d'approvisionnement en matériel, aux infrastructures de surveillance ou aux contrats publics.
 
-**Questions à poser :**
-
-- Qui finance cette technologie, et quel retour en attend-il ?
-- Quelles entreprises, quels sous-traitants ou quels travailleurs sont indispensables à son fonctionnement, sans être jamais mentionnés ?
-- Comment l'argent circule-t-il réellement dans ce système : abonnements, licences, extraction de données, marchés publics ?
-- Qui supporte les coûts (économiques, environnementaux, sociaux) si la technologie échoue ou se déploie de façon inégale ?
+```questions
+source: Suivre l'argent
+Qui finance cette technologie, et quel retour en attend-il ?
+Quelles entreprises, quels sous-traitants ou quels travailleurs sont indispensables à son fonctionnement, sans être jamais mentionnés ?
+Comment l'argent circule-t-il réellement dans ce système : abonnements, licences, extraction de données, marchés publics ?
+Qui supporte les coûts (économiques, environnementaux, sociaux) si la technologie échoue ou se déploie de façon inégale ?
+```
 
 ### Se méfier de l'opposition entre « critiques » et « experts »
 
@@ -848,10 +835,11 @@ Dans les médias, les promoteurs sont souvent présentés comme des « experts �
 
 Gardez à l'esprit que les analystes critiques, les éthiciens, les syndicalistes et les chercheurs en sciences sociales ont souvent une connaissance approfondie du domaine, qui révèle des contextes et des compromis plus larges. Ils sont « experts » au même titre que les promoteurs, sinon davantage. Élargissez plutôt le vocabulaire pour refléter l'expertise réelle (chercheur, analyste, universitaire, praticien, etc.).
 
-**Questions à poser :**
-
-- Est-ce que je présente l'expertise comme seulement technique, ou aussi sociale et éthique ?
-- Comment équilibrer le récit pour que l'examen critique et l'enthousiasme pèsent autant l'un que l'autre ?
+```questions
+source: Se méfier de l'opposition entre « critiques » et « experts »
+Est-ce que je présente l'expertise comme seulement technique, ou aussi sociale et éthique ?
+Comment équilibrer le récit pour que l'examen critique et l'enthousiasme pèsent autant l'un que l'autre ?
+```
 
 ### Mettre en avant les incertitudes et se méfier des prédictions
 
@@ -861,11 +849,12 @@ Dans le discours technologique, les prédictions se font souvent passer pour des
 
 Dans le même esprit, les journalistes eux-mêmes devraient être prudents avec les spéculations dans leurs articles. Un bon travail journalistique cherche au contraire à mettre au jour les incertitudes et à montrer des points de vue concurrents. Reconnaître ce que nous ne savons pas renforce la crédibilité journalistique et aide les lecteurs à réfléchir de façon critique aux futurs technologiques.
 
-**Questions à poser :**
-
-- Qui fait cette prédiction, et qu'a-t-il à gagner à ce qu'elle soit acceptée ?
-- Quelles données ou quelles recherches étayent l'affirmation ? Sont-elles indépendantes, évaluées par des pairs, ou anecdotiques ?
-- Quelles conditions sociales, politiques ou économiques devraient changer pour que cette prévision se réalise ?
+```questions
+source: Mettre en avant les incertitudes et se méfier des prédictions
+Qui fait cette prédiction, et qu'a-t-il à gagner à ce qu'elle soit acceptée ?
+Quelles données ou quelles recherches étayent l'affirmation ? Sont-elles indépendantes, évaluées par des pairs, ou anecdotiques ?
+Quelles conditions sociales, politiques ou économiques devraient changer pour que cette prévision se réalise ?
+```
 
 ### S'intéresser aux technologies qui font moins de bruit
 
@@ -875,11 +864,12 @@ Les technologies délaissées par le hype sont souvent celles qui ont déjà fai
 
 En couvrant ces technologies, les journalistes peuvent proposer d'autres récits de ce que pourrait aussi être le progrès. Il ne s'agit pas d'abandonner la couverture des technologies émergentes, mais de l'équilibrer en s'intéressant à ce qui fonctionne, à ce qui dure et à ce qui sert les gens plutôt que les investisseurs.
 
-**Questions à poser :**
-
-- Existe-t-il des alternatives low-tech, open source ou portées par des communautés à la solution très médiatisée qui fait l'objet du hype ?
-- Quelles innovations voient le jour hors de la Silicon Valley, hors du discours anglophone ou hors des écosystèmes financés par le capital-risque ?
-- Qui construit des technologies pour répondre aux besoins présents plutôt qu'à des futurs spéculatifs, et pourquoi n'est-ce pas jugé digne d'intérêt ?
+```questions
+source: S'intéresser aux technologies qui font moins de bruit
+Existe-t-il des alternatives low-tech, open source ou portées par des communautés à la solution très médiatisée qui fait l'objet du hype ?
+Quelles innovations voient le jour hors de la Silicon Valley, hors du discours anglophone ou hors des écosystèmes financés par le capital-risque ?
+Qui construit des technologies pour répondre aux besoins présents plutôt qu'à des futurs spéculatifs, et pourquoi n'est-ce pas jugé digne d'intérêt ?
+```
 
 ### Cultiver une conscience historique
 
@@ -887,11 +877,12 @@ Le hype technologique surgit rarement de nulle part. Les nouveaux outils sont so
 
 Les technologies du passé, du chemin de fer et de l'électricité à l'ordinateur personnel, à Internet, aux réseaux sociaux et au big data, ont toutes été entourées de prévisions assurées qui ne se sont pas entièrement réalisées, ou se sont réalisées de façon inattendue. Relire la couverture de l'époque, y compris dans les archives de votre propre média, peut montrer comment des affirmations semblables étaient présentées, quels acteurs en ont profité et quels risques ont été négligés. L'histoire ne se répète pas à l'identique, mais elle rime souvent.
 
-**Questions à poser :**
-
-- Des affirmations semblables ont-elles été faites à propos de technologies plus anciennes ? Que s'est-il réellement passé ?
-- Comment cette technologie (ou une technologie comparable) était-elle traitée il y a cinq, dix ou vingt ans ?
-- Quelles voix ont été amplifiées ou ignorées dans la couverture passée, et comment cela a-t-il façonné la compréhension du public ?
+```questions
+source: Cultiver une conscience historique
+Des affirmations semblables ont-elles été faites à propos de technologies plus anciennes ? Que s'est-il réellement passé ?
+Comment cette technologie (ou une technologie comparable) était-elle traitée il y a cinq, dix ou vingt ans ?
+Quelles voix ont été amplifiées ou ignorées dans la couverture passée, et comment cela a-t-il façonné la compréhension du public ?
+```
 
 ```quiz
 titre: Quiz : testez vos acquis

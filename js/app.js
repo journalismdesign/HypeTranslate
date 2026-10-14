@@ -32,6 +32,7 @@
   var state = loadState();
   state.lus = state.lus || {};
   state.cases = state.cases || {};
+  state.quiz = state.quiz || {};      // meilleur résultat de quiz par chapitre : { score, total }
 
   function saveState() {
     try {
@@ -45,6 +46,17 @@
   function uid(prefix) { return prefix + '-' + (++counter); }
 
   var chatData = {};
+  var deckData = {};
+
+  function questionList(list, source, md) {
+    if (!list.length) return '';
+    return '<div class="qset"><p class="qset-title">Questions à se poser</p><ul class="qset-list">' +
+      list.map(function (q) {
+        return '<li class="qcard" data-q="' + md.escape(q) + '" data-src="' + md.escape(source) + '">' +
+          '<span class="qcard-text">' + md.inline(q) + '</span>' +
+          '<button type="button" class="qcard-add" aria-pressed="false"><span class="qcard-add-label">Au carnet</span></button></li>';
+      }).join('') + '</ul></div>';
+  }
   // Signatures des bulles : Synth. (logo) pour les questions, le lecteur pour les réponses
   var AVATAR = {
     bot: '<span class="chat-avatar chat-avatar-bot"><img src="assets/mark-eye-cyan.png" alt="Synth." width="22" height="14"></span>',
@@ -116,6 +128,71 @@
           '<p class="hm-verdict"></p><p>' + md.inline(r.note) + '</p></div>' +
           '</div>';
       }).join('') + '</div>';
+    },
+
+    // Cartouche d'ouverture de chapitre : introduction + objectifs.
+    'vue-ensemble': function (src, md) {
+      var k = src.search(/^objectifs:/m);
+      var intro = k < 0 ? src : src.slice(0, k);
+      var rest = k < 0 ? '' : src.slice(k);
+      var lead = (rest.match(/^objectifs:\s*(.*)$/m) || [])[1] || '';
+      var goals = rest.split('\n').filter(function (l) { return /^-\s+/.test(l); }).map(function (l) { return l.replace(/^-\s+/, ''); });
+      return '<section class="overview" aria-label="Vue d’ensemble">' +
+        '<div class="overview-side"><span class="overview-label">Vue d’ensemble</span><span class="overview-num" aria-hidden="true"></span></div>' +
+        '<div class="overview-main">' + md.render(intro.trim()) +
+        (goals.length ? '<p class="overview-lead">' + md.inline(lead) + '</p><ol class="overview-goals">' +
+          goals.map(function (g, n) {
+            return '<li><span class="overview-goal-n">' + (n < 9 ? '0' : '') + (n + 1) + '</span><span>' + md.inline(g) + '</span></li>';
+          }).join('') + '</ol>' : '') +
+        '</div></section>';
+    },
+
+    // Paquet de cartes : « + Tas :: carte | carte », la parade (markdown), puis « ? question ».
+    paquet: function (src, md) {
+      var id = uid('deck');
+      var piles = [];
+      src.split('\n').forEach(function (line) {
+        var m = line.match(/^\+\s+(.*?)\s*::\s*(.*)$/);
+        if (m) { piles.push({ name: m[1], cards: m[2].split('|').map(function (c) { return c.trim(); }).filter(Boolean), text: [], questions: [] }); return; }
+        if (!piles.length) return;
+        var cur = piles[piles.length - 1];
+        if (/^\?\s+/.test(line)) cur.questions.push(line.replace(/^\?\s+/, ''));
+        else cur.text.push(line);
+      });
+      var cards = [];
+      piles.forEach(function (pl, n) { pl.cards.forEach(function (c) { cards.push({ text: c, pile: n }); }); });
+      deckData[id] = { cards: cards, piles: piles };
+      return '<section class="deck" id="' + id + '" aria-label="Paquet de cartes des pièges rhétoriques">' +
+        '<div class="deck-table">' +
+        '<div class="deck-stack" aria-hidden="true"></div>' +
+        '<div class="deck-help"><p class="deck-count"></p>' +
+        '<p class="deck-hint">Glissez la carte sur un tas, ou choisissez un tas.</p>' +
+        '<p class="deck-feedback" aria-live="polite"></p></div>' +
+        '</div>' +
+        '<div class="deck-piles" role="group" aria-label="Les quatre tas">' + piles.map(function (pl, n) {
+          return '<button type="button" class="pile" data-pile="' + n + '">' +
+            '<span class="pile-name">' + md.inline(pl.name) + '</span>' +
+            '<span class="pile-count">0 / ' + pl.cards.length + '</span>' +
+            '<span class="pile-cards" aria-hidden="true"></span></button>';
+        }).join('') + '</div>' +
+        '<div class="deck-parades">' + piles.map(function (pl, n) {
+          return '<article class="parade is-locked" data-pile="' + n + '">' +
+            '<header class="parade-head"><span class="parade-kicker">Parade</span>' +
+            '<h4>' + md.inline(pl.name) + '</h4>' +
+            '<span class="parade-lock">Complétez le tas pour révéler la parade</span></header>' +
+            '<div class="parade-body">' + md.render(pl.text.join('\n').trim()) +
+            questionList(pl.questions, pl.name, md) + '</div></article>';
+        }).join('') + '</div>' +
+        '<button type="button" class="deck-reset">Rebattre les cartes</button>' +
+        '</section>';
+    },
+
+    // Questions à se poser : chacune peut rejoindre le carnet du lecteur.
+    questions: function (src, md) {
+      var lines = src.split('\n').filter(function (l) { return l.trim(); });
+      var source = '';
+      if (/^source:/.test(lines[0] || '')) source = lines.shift().replace(/^source:\s*/, '');
+      return questionList(lines, source, md);
     },
 
     section: function (src) {
@@ -281,7 +358,17 @@
       });
     });
 
-    root.querySelectorAll('.chat').forEach(function (box) { startChat(box, chatData[box.id] || []); });
+    root.querySelectorAll('.overview-num').forEach(function (el) {
+      var n = (moduleId.match(/chapitre-(\d+)/) || [])[1];
+      el.textContent = n ? (n < 10 ? '0' : '') + n : '';
+    });
+    if (window.Atelier) {
+      Atelier.overview(root);
+      root.querySelectorAll('.deck').forEach(function (box) { Atelier.deck(box, deckData[box.id]); });
+      Atelier.questions(root);
+    }
+
+    root.querySelectorAll('.chat').forEach(function (box) { startChat(box, chatData[box.id] || [], moduleId); });
 
     root.querySelectorAll('.hm-item').forEach(function (item) {
       var expected = parseInt(item.dataset.score, 10);
@@ -415,7 +502,7 @@
     return new Promise(function (resolve) { setTimeout(resolve, reduceMotion ? 0 : ms); });
   }
 
-  function startChat(box, questions) {
+  function startChat(box, questions, moduleId) {
     var log = box.querySelector('.chat-log');
     var replies = box.querySelector('.chat-replies');
     var scoreEl = box.querySelector('.chat-score');
@@ -535,6 +622,7 @@
       wait(600).then(function () {
         dots.remove();
         var all = score === questions.length;
+        recordQuiz(moduleId, score, questions.length);
         bubble('bot', '<strong>Score : ' + score + ' / ' + questions.length + '.</strong> ' +
           (all ? 'Sans faute. Le hype ne vous aura pas.' : 'Relisez le chapitre pour les points manqués, puis retentez votre chance.'));
         chips([{ html: 'Recommencer', primary: true }], function () {
@@ -558,6 +646,26 @@
     }
     // Changement de chapitre : on arrête les minuteries en cours.
     window.addEventListener('hashchange', function stop() { alive = false; window.removeEventListener('hashchange', stop); });
+  }
+
+  // Le sommaire garde la couleur du dernier résultat de quiz du chapitre.
+  function recordQuiz(moduleId, score, total) {
+    if (!moduleId) return;
+    state.quiz[moduleId] = { score: score, total: total };
+    saveState();
+    renderToc(currentModule);
+    var link = toc.querySelector('a[href="#/' + moduleId + '"]');
+    if (link && window.gsap && !reduceMotion) {
+      gsap.fromTo(link, { scale: 1.06 }, { scale: 1, duration: .6, ease: 'elastic.out(1, .5)' });
+    }
+  }
+
+  function quizClass(id) {
+    var r = state.quiz[id];
+    if (!r || !r.total) return '';
+    if (r.score === r.total) return 'quiz-ok';
+    if (r.score * 2 >= r.total) return 'quiz-mid';
+    return 'quiz-low';
   }
 
   /* ---------- Découpage du contenu ---------- */
@@ -587,9 +695,13 @@
       var cls = [];
       if (m.id === currentId) cls.push('is-current');
       if (state.lus[m.id]) cls.push('is-read');
+      var q = quizClass(m.id);
+      if (q) cls.push(q);
+      var r = state.quiz[m.id];
+      var badge = r ? '<span class="toc-quiz" aria-label="Quiz : ' + r.score + ' sur ' + r.total + '">' + r.score + '/' + r.total + '</span>' : '';
       return '<li class="' + cls.join(' ') + '"><a href="#/' + m.id + '"' +
-        (m.id === currentId ? ' aria-current="page"' : '') + '>' +
-        MiniMarkdown.escape(m.title) + '</a></li>';
+        (m.id === currentId ? ' aria-current="page"' : '') + '><span class="toc-title">' +
+        MiniMarkdown.escape(m.title) + '</span>' + badge + '</a></li>';
     }).join('');
   }
 
@@ -604,9 +716,11 @@
   }
 
   var endObserver = null;
+  var currentModule = null;
 
   function show(id) {
     var index = modules.findIndex(function (m) { return m.id === id; });
+    currentModule = (modules[index] || modules[0]).id;
     if (index === -1) index = 0;
     var mod = modules[index];
     var prev = modules[index - 1];
@@ -675,9 +789,10 @@
   // Le thème est géré par js/synth-header.js (clé partagée « synth-theme »).
 
   document.querySelector('.reset').addEventListener('click', function () {
-    if (!window.confirm('Effacer votre progression et vos cases cochées ?')) return;
+    if (!window.confirm('Effacer votre progression, vos résultats de quiz et vos cases cochées ?')) return;
     state.lus = {};
     state.cases = {};
+    state.quiz = {};
     saveState();
     show(currentId());
   });
