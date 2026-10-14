@@ -1,0 +1,89 @@
+/*
+ * Header Synth — modèle « Zéro Clics » (AI Overviews, la fin du clic).
+ * Bandeau sombre fixe qui ne suit JAMAIS le thème, mot « Synth » évidé + œil cyan,
+ * étiquette de rubrique, bascule clair/sombre carrée, barre de lecture cyan en haut.
+ * Comportement (js/synth-header.js) : fond flouté dès 8 px de défilement,
+ * masqué en descendant au-delà de 140 px, réapparaît en remontant.
+ *
+ * Variables à régler par projet :
+ *   --sh-row-w   largeur de la ligne du header = largeur du contenu de la page
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700..900&display=swap");
+
+:root {
+  --sh-mast: #0a0a0a;      /* constante de marque : identique en clair et en sombre */
+  --sh-mast-ink: #ffffff;
+  --sh-cyan: #00ffe0;
+  --sh-tag: #8a8a86;
+  --sh-height: 56px;
+  --sh-row-w: 700px;
+}
+
+/* ---------- barre de lecture ---------- */
+.sh-progress {
+  position: fixed; top: 0; left: 0; z-index: 60;
+  width: 100%; height: 3px;
+  background: transparent; pointer-events: none;
+}
+.sh-progress-fill { height: 100%; width: 0%; background: var(--sh-cyan); }
+
+/* ---------- bandeau ---------- */
+header.sh-site {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--sh-mast);
+  border-bottom: 2px solid #000;
+  transition: transform .35s ease, background-color .3s ease;
+}
+header.sh-site.scrolled {
+  background: rgba(10, 10, 10, .88);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+header.sh-site.hide { transform: translateY(-100%); }
+
+.sh-row {
+  max-width: var(--sh-row-w); margin: 0 auto; padding: 0 24px;
+  height: var(--sh-height);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.sh-left, .sh-controls { display: flex; align-items: center; gap: 14px; min-width: 0; }
+
+/* ---------- logo ---------- */
+.sh-logo { display: flex; align-items: center; gap: 7px; text-decoration: none; flex: none; }
+.sh-logo-word {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-weight: 900; font-size: 1.2rem; letter-spacing: .01em; line-height: 1;
+  color: transparent; -webkit-text-stroke: 1.1px var(--sh-mast-ink);
+}
+.sh-logo-eye { display: block; flex: none; }
+
+/* ---------- rubrique ---------- */
+.sh-tag {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-size: .68rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--sh-tag);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ---------- boutons carrés (thème, menu) ---------- */
+.sh-btn {
+  appearance: none; -webkit-appearance: none; margin: 0;
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 28px; height: 28px; padding: 0; border-radius: 0;
+  border: 1.5px solid var(--sh-mast-ink);
+  background: transparent; color: var(--sh-mast-ink); cursor: pointer;
+}
+.sh-btn:hover { border-color: var(--sh-cyan); color: var(--sh-cyan); }
+.sh-btn:focus-visible { outline: 2px solid var(--sh-cyan); outline-offset: 2px; }
+.sh-btn svg { display: block; }
+.sh-theme .icon { display: none; }
+.sh-theme.show-sun .icon-sun,
+.sh-theme.show-moon .icon-moon { display: block; }
+
+@media (max-width: 560px) {
+  .sh-row { padding: 0 16px; }
+  .sh-tag { max-width: 38vw; }
+}
+@media (prefers-reduced-motion: reduce) {
+  header.sh-site { transition: none; }
+}

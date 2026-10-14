@@ -7,33 +7,45 @@
   <meta name="description" content="Parcours en français pour couvrir l'intelligence artificielle sans amplifier le hype. Adaptation Synth du cours Hype Literacy de la DW Akademie.">
   <meta name="theme-color" content="#000000">
   <link rel="icon" href="assets/mark-eye-cyan.png" type="image/png">
+  <script>
+    /* Thème appliqué avant l'affichage, pour éviter un flash (clé partagée par les long formats Synth) */
+    try { var t = localStorage.getItem('synth-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+  </script>
+  <link rel="stylesheet" href="css/synth-header.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <a class="skip" href="#contenu">Aller au contenu</a>
 
-  <header class="topbar">
-    <button class="menu-toggle" type="button" aria-controls="sommaire" aria-expanded="false">
-      <span class="sr-only">Ouvrir le sommaire</span>
-      <span class="burger" aria-hidden="true"></span>
-    </button>
-    <a class="brand" href="#/accueil" aria-label="Synth — accueil du parcours">
-      <span class="brand-logo">
-        <img class="logo-dark" src="assets/logo-synth-white-cyan.png" alt="Synth." height="30">
-        <img class="logo-light" src="assets/logo-synth-black.png" alt="Synth." height="30">
-      </span>
-      <span class="brand-title">Littératie du hype</span>
-    </a>
-    <button class="theme-toggle" type="button" aria-label="Passer en thème clair">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>
-    </button>
-    <div class="progress" role="progressbar" aria-label="Progression du parcours" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-      <span class="progress-bar"></span>
+  <div class="sh-progress" aria-hidden="true"><div class="sh-progress-fill" id="progressFill"></div></div>
+
+  <header class="sh-site" id="siteHeader">
+    <div class="sh-row">
+      <div class="sh-left">
+        <button class="sh-btn menu-toggle" type="button" aria-controls="sommaire" aria-expanded="false" aria-label="Ouvrir le sommaire">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg>
+        </button>
+        <a class="sh-logo" href="https://synthmedia.fr/" target="_blank" rel="noopener" aria-label="Synth — synthmedia.fr">
+          <span class="sh-logo-word">Synth</span>
+          <svg class="sh-logo-eye" width="20" height="16" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polygon points="2,38 35,6 70,10 98,40 68,50 48,74 34,52" fill="none" stroke="#00ffe0" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><circle cx="50" cy="32" r="13" fill="#0a0a0a"/><line x1="40" y1="78" x2="58" y2="78" stroke="#00ffe0" stroke-width="7" stroke-linecap="round"/></svg>
+        </a>
+      </div>
+      <div class="sh-controls">
+        <a class="sh-tag" href="#/accueil">Littératie du hype</a>
+        <button class="sh-btn sh-theme show-moon" id="themeToggle" type="button" aria-label="Basculer entre thème clair et sombre">
+          <svg class="icon icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="1.6"/><path d="M12 2.5v2.4M12 19.1v2.4M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <svg class="icon icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 14.2A8.5 8.5 0 1 1 9.8 4a6.7 6.7 0 0 0 10.2 10.2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
     </div>
   </header>
 
   <div class="layout">
     <nav id="sommaire" class="sidebar" aria-label="Sommaire">
+      <div class="course-progress" role="progressbar" aria-label="Progression du parcours" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <span class="course-progress-label">Progression <b class="course-progress-count">0 / 0</b></span>
+        <span class="course-progress-track"><span class="course-progress-bar"></span></span>
+      </div>
       <ol class="toc"></ol>
       <button class="reset" type="button">Réinitialiser ma progression</button>
     </nav>
@@ -49,6 +61,7 @@
     <img class="footer-mark" src="assets/mark-eye-cyan.png" alt="" aria-hidden="true">
   </footer>
 
+  <script src="js/synth-header.js"></script>
   <script src="js/markdown.js"></script>
   <script src="js/app.js"></script>
 </body>

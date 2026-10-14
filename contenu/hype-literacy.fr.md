@@ -303,7 +303,6 @@ Q: Laquelle de ces notions désigne une période où le prix d'un actif dépasse
 - [ ] Le hype
 - [ ] La tendance
 - [x] La bulle
-- [ ] L'alarmisme
 > Une bulle n'est souvent identifiable qu'après coup, une fois qu'elle a éclaté. Le hype, lui, est une dynamique sociale plus large : il peut alimenter une bulle sans s'y réduire.
 ```
 
@@ -414,6 +413,7 @@ Q: Qu'appelle-t-on le *leapfrogging*, ou « saut technologique » ?
 Q: Le hype est-il propre aux sociétés capitalistes ?
 - [ ] Oui : il naît de la recherche du profit
 - [x] Non : la course à l'espace soviétique ou la modernisation maoïste en sont aussi des exemples
+- [ ] Non : il est apparu avec Internet et les réseaux sociaux
 > Le cours montre que le hype accompagne les promesses de la modernité, dans les systèmes capitalistes libéraux comme dans les États communistes, qui comptaient sur la technologie pour l'innovation marchande ou l'ingénierie sociale.
 
 Q: Que décrit l'effet de verrouillage (*lock-in*) dans ce chapitre ?

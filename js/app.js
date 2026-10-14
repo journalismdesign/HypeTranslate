@@ -14,8 +14,9 @@
   var toc = document.querySelector('.toc');
   var sidebar = document.getElementById('sommaire');
   var menuToggle = document.querySelector('.menu-toggle');
-  var progress = document.querySelector('.progress');
-  var progressBar = document.querySelector('.progress-bar');
+  var progress = document.querySelector('.course-progress');
+  var progressBar = document.querySelector('.course-progress-bar');
+  var progressCount = document.querySelector('.course-progress-count');
   var modules = [];
 
   /* ---------- Stockage local (tolérant aux navigateurs qui le bloquent) ---------- */
@@ -43,6 +44,9 @@
   var counter = 0;
   function uid(prefix) { return prefix + '-' + (++counter); }
 
+  var chatData = {};
+  var EYE_SVG = '<svg width="20" height="16" viewBox="0 0 100 80" aria-hidden="true"><polygon points="2,38 35,6 70,10 98,40 68,50 48,74 34,52" fill="none" stroke="#00ffe0" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/><circle cx="50" cy="32" r="13" fill="#00ffe0"/></svg>';
+
   var handlers = {
     cartes: function (src, md) {
       var cards = src.split('\n').filter(Boolean).map(function (line) {
@@ -57,28 +61,35 @@
       }).join('') + '</div>';
     },
 
+    // Quiz en mode conversation : le contenu reste dans le .md (Q: / - [ ] / - [x] / >),
+    // le déroulé (frappe, bulles, réponses) est joué par bindInteractions.
     quiz: function (src, md) {
-      var blocks = src.split(/\n\s*\n/).filter(function (b) { return b.trim(); });
-      return blocks.map(function (block) {
-        var id = uid('q');
-        var question = '';
-        var answers = [];
-        var explanation = [];
+      var id = uid('chat');
+      var questions = src.split(/\n\s*\n/).filter(function (b) { return b.trim(); }).map(function (block) {
+        var q = { text: '', answers: [], explanation: [] };
         block.split('\n').forEach(function (line) {
           var m;
-          if ((m = line.match(/^Q:\s*(.*)$/))) question = m[1];
-          else if ((m = line.match(/^-\s*\[([ xX])\]\s*(.*)$/))) answers.push({ ok: m[1] !== ' ', text: m[2] });
-          else if ((m = line.match(/^>\s?(.*)$/))) explanation.push(m[1]);
+          if ((m = line.match(/^Q:\s*(.*)$/))) q.text = m[1];
+          else if ((m = line.match(/^-\s*\[([ xX])\]\s*(.*)$/))) q.answers.push({ ok: m[1] !== ' ', html: md.inline(m[2]) });
+          else if ((m = line.match(/^>\s?(.*)$/))) q.explanation.push(m[1]);
         });
-        return '<fieldset class="quiz" id="' + id + '">' +
-          '<legend><span class="tag">Quiz</span>' + md.inline(question) + '</legend>' +
-          '<div class="answers">' + answers.map(function (a) {
-            return '<button type="button" class="answer" data-ok="' + a.ok + '">' + md.inline(a.text) + '</button>';
-          }).join('') + '</div>' +
-          '<p class="feedback" aria-live="polite" hidden></p>' +
-          '<p class="explanation" hidden>' + md.inline(explanation.join(' ')) + '</p>' +
-          '</fieldset>';
-      }).join('');
+        return {
+          html: md.inline(q.text),
+          plain: q.text.replace(/\*+/g, ''),
+          answers: q.answers,
+          explanation: md.inline(q.explanation.join(' '))
+        };
+      });
+      chatData[id] = questions;
+      return '<section class="chat" id="' + id + '" aria-label="Quiz en conversation">' +
+        '<header class="chat-head">' +
+        '<span class="chat-avatar" aria-hidden="true">' + EYE_SVG + '</span>' +
+        '<span class="chat-name">Synth.<small>Quiz · ' + questions.length + ' questions</small></span>' +
+        '<span class="chat-score" aria-live="polite">0 / ' + questions.length + '</span>' +
+        '</header>' +
+        '<div class="chat-log" role="log" aria-live="polite"></div>' +
+        '<div class="chat-replies" role="group" aria-label="Vos réponses"></div>' +
+        '</section>';
     },
 
     hypemetre: function (src, md) {
@@ -265,24 +276,7 @@
       });
     });
 
-    root.querySelectorAll('.quiz').forEach(function (quiz) {
-      var feedback = quiz.querySelector('.feedback');
-      var explanation = quiz.querySelector('.explanation');
-      quiz.querySelectorAll('.answer').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-          var ok = btn.dataset.ok === 'true';
-          quiz.querySelectorAll('.answer').forEach(function (b) {
-            b.classList.remove('is-wrong');
-            if (b.dataset.ok === 'true' && ok) b.classList.add('is-right');
-          });
-          btn.classList.add(ok ? 'is-right' : 'is-wrong');
-          feedback.hidden = false;
-          feedback.textContent = ok ? 'Bonne réponse.' : 'Pas tout à fait. Essayez encore, ou lisez l\u2019explication.';
-          feedback.className = 'feedback ' + (ok ? 'ok' : 'ko');
-          explanation.hidden = false;
-        });
-      });
-    });
+    root.querySelectorAll('.chat').forEach(function (box) { startChat(box, chatData[box.id] || []); });
 
     root.querySelectorAll('.hm-item').forEach(function (item) {
       var expected = parseInt(item.dataset.score, 10);
@@ -407,6 +401,143 @@
     });
   }
 
+  /* ---------- Quiz en conversation ---------- */
+
+  var reduceMotion = false;
+  try { reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+
+  function wait(ms) {
+    return new Promise(function (resolve) { setTimeout(resolve, reduceMotion ? 0 : ms); });
+  }
+
+  function startChat(box, questions) {
+    var log = box.querySelector('.chat-log');
+    var replies = box.querySelector('.chat-replies');
+    var scoreEl = box.querySelector('.chat-score');
+    var score = 0;
+    var alive = true;
+    var started = false;
+
+    function scrollLog() { log.scrollTop = log.scrollHeight; }
+
+    function bubble(side, html) {
+      var row = document.createElement('div');
+      row.className = 'chat-row chat-' + side;
+      var b = document.createElement('div');
+      b.className = 'chat-bubble';
+      if (html !== undefined) b.innerHTML = html;
+      row.appendChild(b);
+      log.appendChild(row);
+      scrollLog();
+      return b;
+    }
+
+    function typing(side) {
+      var row = document.createElement('div');
+      row.className = 'chat-row chat-' + side + ' chat-typing-row';
+      row.innerHTML = '<div class="chat-bubble chat-typing" aria-label="' +
+        (side === 'bot' ? 'Synth. écrit…' : 'À vous de répondre') + '"><i></i><i></i><i></i></div>';
+      log.appendChild(row);
+      scrollLog();
+      return row;
+    }
+
+    // La question se tape lettre à lettre, puis prend sa mise en forme définitive.
+    function typeInto(el, plain, html) {
+      if (reduceMotion) { el.innerHTML = html; return Promise.resolve(); }
+      var step = Math.max(8, Math.min(28, 1500 / plain.length));
+      var i = 0;
+      el.classList.add('is-typing');
+      return new Promise(function (resolve) {
+        (function next() {
+          if (!alive) return resolve();
+          i += 1;
+          el.textContent = plain.slice(0, i);
+          scrollLog();
+          if (i < plain.length) setTimeout(next, step);
+          else { el.classList.remove('is-typing'); el.innerHTML = html; resolve(); }
+        })();
+      });
+    }
+
+    function chips(list, onPick) {
+      replies.innerHTML = '';
+      list.forEach(function (item) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'chat-chip' + (item.primary ? ' is-primary' : '');
+        btn.innerHTML = item.html;
+        btn.addEventListener('click', function () {
+          replies.innerHTML = '';
+          onPick(item);
+        });
+        replies.appendChild(btn);
+      });
+    }
+
+    function ask(index) {
+      if (!alive) return;
+      if (index >= questions.length) return finish();
+      var q = questions[index];
+      var dots = typing('bot');
+      wait(650).then(function () {
+        dots.remove();
+        var b = bubble('bot');
+        b.insertAdjacentHTML('beforebegin', '<span class="chat-step">Question ' + (index + 1) + ' / ' + questions.length + '</span>');
+        return typeInto(b, q.plain, q.html);
+      }).then(function () {
+        // Les trois réponses apparaissent avec la bulle « en train d'écrire » côté lecteur.
+        var mine = typing('me');
+        chips(shuffle(q.answers.slice()), function (answer) {
+          mine.remove();
+          bubble('me', answer.html);
+          var botDots = typing('bot');
+          wait(800).then(function () {
+            botDots.remove();
+            var good = q.answers.filter(function (a) { return a.ok; })[0];
+            if (answer.ok) score += 1;
+            scoreEl.textContent = score + ' / ' + questions.length;
+            bubble('bot', answer.ok
+              ? '<strong class="chat-verdict is-right">✓ Juste.</strong> ' + q.explanation
+              : '<strong class="chat-verdict is-wrong">✗ Faux.</strong> La bonne réponse : « ' + good.html + ' ». ' + q.explanation);
+            chips([{ html: index + 1 < questions.length ? 'Question suivante →' : 'Voir mon score', primary: true }], function () {
+              ask(index + 1);
+            });
+          });
+        });
+      });
+    }
+
+    function finish() {
+      var dots = typing('bot');
+      wait(600).then(function () {
+        dots.remove();
+        var all = score === questions.length;
+        bubble('bot', '<strong>Score : ' + score + ' / ' + questions.length + '.</strong> ' +
+          (all ? 'Sans faute. Le hype ne vous aura pas.' : 'Relisez le chapitre pour les points manqués, puis retentez votre chance.'));
+        chips([{ html: 'Recommencer', primary: true }], function () {
+          log.innerHTML = '';
+          score = 0;
+          scoreEl.textContent = '0 / ' + questions.length;
+          ask(0);
+        });
+      });
+    }
+
+    // La conversation démarre quand le quiz arrive à l'écran.
+    function begin() { if (!started) { started = true; ask(0); } }
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        if (entries.some(function (e) { return e.isIntersecting; })) { io.disconnect(); begin(); }
+      }, { threshold: 0.35 });
+      io.observe(box);
+    } else {
+      begin();
+    }
+    // Changement de chapitre : on arrête les minuteries en cours.
+    window.addEventListener('hashchange', function stop() { alive = false; window.removeEventListener('hashchange', stop); });
+  }
+
   /* ---------- Découpage du contenu ---------- */
 
   function parseModules(src) {
@@ -447,6 +578,7 @@
     progressBar.style.width = pct + '%';
     progress.setAttribute('aria-valuenow', String(pct));
     progress.setAttribute('aria-valuetext', read + ' module(s) sur ' + list.length);
+    progressCount.textContent = read + ' / ' + list.length;
   }
 
   var endObserver = null;
@@ -508,28 +640,17 @@
 
   function closeMenu() {
     sidebar.classList.remove('is-open');
+    document.body.classList.remove('menu-open');
     menuToggle.setAttribute('aria-expanded', 'false');
   }
 
   menuToggle.addEventListener('click', function () {
     var open = sidebar.classList.toggle('is-open');
+    document.body.classList.toggle('menu-open', open);
     menuToggle.setAttribute('aria-expanded', String(open));
   });
 
-  // Sombre par défaut (charte Synth) ; le thème clair est un choix mémorisé.
-  var themeToggle = document.querySelector('.theme-toggle');
-  function applyTheme() {
-    var light = state.theme === 'light';
-    if (light) document.documentElement.dataset.theme = 'light';
-    else delete document.documentElement.dataset.theme;
-    themeToggle.setAttribute('aria-label', light ? 'Passer en thème sombre' : 'Passer en thème clair');
-  }
-  applyTheme();
-  themeToggle.addEventListener('click', function () {
-    state.theme = state.theme === 'light' ? 'dark' : 'light';
-    saveState();
-    applyTheme();
-  });
+  // Le thème est géré par js/synth-header.js (clé partagée « synth-theme »).
 
   document.querySelector('.reset').addEventListener('click', function () {
     if (!window.confirm('Effacer votre progression et vos cases cochées ?')) return;
