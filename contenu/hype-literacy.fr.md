@@ -22,6 +22,11 @@
       cartes         une carte par ligne : Recto :: Verso
       accordeon      « + Titre » puis le contenu (markdown) jusqu'au titre suivant
       tri            une catégorie par ligne : Catégorie :: élément | élément | …
+      quiz           Q: question / - [ ] mauvaise réponse / - [x] bonne réponse / > explication
+                     (plusieurs questions séparées par une ligne vide)
+      hypemetre      un titre par ligne : Titre :: note de 0 à 3 :: commentaire
+  - Une liste de cases « - [ ] » devient une check-list cochable, mémorisée dans le navigateur.
+  - Les quiz, le hype-o-mètre et la check-list sont des ajouts de Synth, absents du cours original.
       image-annotee  image: chemin, puis une ligne par repère : x, y :: titre :: description
   - Dans les légendes, « <br> » force un retour à la ligne.
 -->
@@ -271,6 +276,37 @@ titre: Building the Netherlands' National Quantum Ecosystem animation: « Everyt
 source: https://www.youtube.com/watch?v=dE9Sp41_Fbg&t=24s
 ```
 
+## Quiz : testez vos acquis
+
+*Exercice ajouté par Synth, absent du cours original de la DW Akademie.*
+
+```quiz
+Q: Selon le cours, le hype est-il un processus naturel ?
+- [ ] Oui : il suit les étapes du cycle de Gartner
+- [x] Non : il est fabriqué stratégiquement par les entreprises technologiques, les agences de RP et leurs dirigeants
+- [ ] Non : il est uniquement le fait des médias
+> Le hype « n'est jamais accidentel ». Les médias l'amplifient et le font circuler, mais ils ne sont qu'un maillon d'une chaîne qui compte des meneurs (géants de la tech, start-up, laboratoires, acteurs financiers) et des suiveurs.
+
+Q: Pourquoi des chercheurs qualifient-ils le cycle du hype de Gartner de « théorie populaire » ?
+- [ ] Parce qu'il a été inventé par des journalistes
+- [x] Parce qu'il est commode mais de faible valeur analytique : il ne dit ni comment mesurer l'attention, ni sur quelles durées
+- [ ] Parce qu'il ne s'applique qu'à l'intelligence artificielle
+> La courbe vient d'un cabinet de conseil, pas de la recherche. Les données réelles de couverture médiatique, comme celles de Max Roßmann sur le *New York Times*, dessinent un tracé bien plus désordonné qu'un cycle.
+
+Q: Quelle notion de Harry Frankfurt le cours mobilise-t-il pour décrire le rapport du hype à la vérité ?
+- [ ] Le mensonge
+- [x] Le *bullshit* (le baratin)
+- [ ] La propagande
+> Le menteur connaît la vérité et la cache. Le baratineur, lui, est indifférent à la vérité de ce qu'il dit. Les hypeurs ne mentent pas forcément : ils se soucient peu de la différence entre fait et croyance.
+
+Q: Laquelle de ces notions désigne une période où le prix d'un actif dépasse largement sa valeur intrinsèque et de long terme ?
+- [ ] Le hype
+- [ ] La tendance
+- [x] La bulle
+- [ ] L'alarmisme
+> Une bulle n'est souvent identifiable qu'après coup, une fois qu'elle a éclaté. Le hype, lui, est une dynamique sociale plus large : il peut alimenter une bulle sans s'y réduire.
+```
+
 <!-- module: chapitre-2 | 2. Le hype des technologies prometteuses -->
 
 # Chapitre 2 : Le hype des technologies prometteuses
@@ -363,6 +399,29 @@ Les découvertes technologiques et scientifiques sont régulièrement rattachée
 La technologie se voit conférer le statut d'un rédempteur sublime qu'il faut encourager et exploiter. Quand ce positionnement réussit, la technologie s'entoure d'une « aura de nécessité pratique indélébile », comme l'observe [Winner (1978)](https://archive.org/details/don00lang/page/n7/mode/2up), et « ignorer ces exigences, ou ne pas les satisfaire suffisamment, revient à attaquer les fondements mêmes sur lesquels repose l'ordre social moderne » (p. 259, traduction libre).
 
 Tout cela renvoie à la dimension politique du hype, que nous aborderons au chapitre suivant.
+
+## Quiz : testez vos acquis
+
+*Exercice ajouté par Synth, absent du cours original de la DW Akademie.*
+
+```quiz
+Q: Qu'appelle-t-on le *leapfrogging*, ou « saut technologique » ?
+- [ ] Le passage rapide d'une technologie du laboratoire au marché
+- [x] L'idée que les pays du Sud global pourraient sauter des étapes du développement en adoptant directement les technologies les plus récentes
+- [ ] Une technique de financement par étapes des start-up
+> En pratique, ce saut a rarement lieu : les technologies avancées dépendent d'infrastructures fiables, d'institutions stables et de capacités locales qu'on ne peut pas « enjamber ». Rose M. Mutiso y voit une forme de techno-optimisme radical.
+
+Q: Le hype est-il propre aux sociétés capitalistes ?
+- [ ] Oui : il naît de la recherche du profit
+- [x] Non : la course à l'espace soviétique ou la modernisation maoïste en sont aussi des exemples
+> Le cours montre que le hype accompagne les promesses de la modernité, dans les systèmes capitalistes libéraux comme dans les États communistes, qui comptaient sur la technologie pour l'innovation marchande ou l'ingénierie sociale.
+
+Q: Que décrit l'effet de verrouillage (*lock-in*) dans ce chapitre ?
+- [ ] Une entreprise qui empêche ses clients de changer de fournisseur
+- [x] Des institutions qui se sentent obligées d'investir dans une technologie parce que le futur promis a pris de l'élan, même quand les preuves sont minces
+- [ ] Un gouvernement qui interdit une technologie étrangère
+> Les promesses deviennent des attentes, puis des exigences. Les journalistes peuvent accroître ou réduire cette pression, selon qu'ils relaient sans recul ou qu'ils éclairent les coûts et les risques.
+```
 
 <!-- module: chapitre-3 | 3. La politique du hype -->
 
@@ -507,6 +566,30 @@ Les motivations du hype sont stratégiques. Pour certains acteurs, il est une vo
 
 Comprendre ces motivations, et voir qui produit, qui amplifie et ce que le hype dissimule, aide les journalistes à saisir que le hype n'est pas un simple enthousiasme : il est à la fois un enjeu et un instrument de pouvoir.
 
+## Quiz : testez vos acquis
+
+*Exercice ajouté par Synth, absent du cours original de la DW Akademie.*
+
+```quiz
+Q: Face à une affirmation technologique fracassante, quelle question le cours recommande-t-il de poser ?
+- [ ] Est-ce techniquement possible ?
+- [x] Que gagnent-ils si on les croit ?
+- [ ] Les autres médias en ont-ils parlé ?
+> Argent, influence, pertinence, légitimité publique, avantage géopolitique : identifier ce que l'émetteur gagne à être cru permet de replacer l'affirmation dans son contexte d'intérêts.
+
+Q: Quel effet le hype a-t-il sur la manière dont les institutions décident ?
+- [ ] Il favorise une délibération démocratique plus approfondie
+- [x] Il les pousse dans une posture réactive, guidée par l'anticipation et la peur d'être distancées plutôt que par les preuves
+- [ ] Il n'a pas d'effet sur les politiques publiques
+> Au lieu de gouverner les technologies dans l'intérêt général, les gouvernements finissent par gouverner *en fonction* d'elles, en s'alignant sur les visions des faiseurs de hype les plus influents.
+
+Q: Qui sont les « acteurs invisibilisés » du hype ?
+- [ ] Les investisseurs qui préfèrent rester anonymes
+- [x] Les annotateurs de données, les travailleurs des mines, les modérateurs, les populations riveraines des infrastructures…
+- [ ] Les journalistes indépendants
+> Ils sont concernés au premier chef par les technologies en vogue, mais presque absents des récits. Le cours y voit la reproduction de dynamiques coloniales.
+```
+
 <!-- module: chapitre-4 | 4. Quand les journalistes amplifient le hype -->
 
 # Chapitre 4 : Quand les journalistes amplifient le hype
@@ -624,6 +707,30 @@ La vulnérabilité au hype ne tient que pour une part aux mauvais choix de tel o
 - **Le hype s'auto-alimente** : une fois qu'un récit a pris de l'élan, le contredire donne l'impression d'aller contre l'histoire plutôt que de faire du bon journalisme.
 
 L'objectif n'est pas de supprimer l'urgence ni de cesser de couvrir les évolutions émergentes, mais de savoir repérer les moments où ces pressions structurelles risquent le plus d'égarer les journalistes, et de se doter de stratégies (que nous verrons au chapitre suivant) pour garder une distance critique, même sous la pression du bouclage.
+
+## Quiz : testez vos acquis
+
+*Exercice ajouté par Synth, absent du cours original de la DW Akademie.*
+
+```quiz
+Q: Qu'est-ce que le *churnalism* ?
+- [ ] Le journalisme de données appliqué aux marchés financiers
+- [x] La pratique qui consiste à republier des communiqués de presse avec un minimum de travail journalistique supplémentaire
+- [ ] La couverture en continu d'un même sujet pendant plusieurs jours
+> Il est particulièrement visible dans la couverture des technologies et de la santé, par exemple quand des résultats d'essais cliniques préliminaires sont repris en quelques heures, sans avis d'experts indépendants.
+
+Q: Dans la rhétorique du hype, que désigne le mot grec *kairos* ?
+- [ ] La crise qui suit l'éclatement d'une bulle
+- [x] Le moment opportun, la « fenêtre d'opportunité qui se referme »
+- [ ] Le discours d'un dirigeant charismatique
+> « Investissez maintenant », « agissez avant qu'il ne soit trop tard » : le hype insiste sur le coût de l'occasion manquée pour pousser à agir vite. Les rédactions y sont aussi exposées, par crainte d'arriver en retard.
+
+Q: Quelle partie des articles scientifiques disparaît souvent des communiqués de presse ?
+- [ ] Le résumé
+- [ ] La bibliographie
+- [x] La partie consacrée aux limites de l'étude
+> Les chercheurs y précisent la population étudiée, la taille des effets et les incertitudes. Sans elle, une faible corrélation devient « une étude montre que… ».
+```
 
 <!-- module: chapitre-5 | 5. Comment couvrir le hype -->
 
@@ -792,6 +899,65 @@ Les technologies du passé, du chemin de fer et de l'électricité à l'ordinate
 - Des affirmations semblables ont-elles été faites à propos de technologies plus anciennes ? Que s'est-il réellement passé ?
 - Comment cette technologie (ou une technologie comparable) était-elle traitée il y a cinq, dix ou vingt ans ?
 - Quelles voix ont été amplifiées ou ignorées dans la couverture passée, et comment cela a-t-il façonné la compréhension du public ?
+
+## Quiz : testez vos acquis
+
+*Exercice ajouté par Synth, absent du cours original de la DW Akademie.*
+
+```quiz
+Q: Une start-up annonce une levée de fonds record. Qu'est-ce que cela prouve ?
+- [ ] Que sa technologie fonctionne
+- [ ] Que son marché est assuré
+- [x] Surtout que des investisseurs attendent un rendement : la levée est une obligation autant qu'une réussite
+> Le capital-risque est un investissement à haut risque. Ce qui est financé correspond aux récits d'investissement du moment, pas forcément à ce qui fonctionne le mieux. Comparez la valorisation au chiffre d'affaires, aux utilisateurs ou à l'impact démontré.
+
+Q: Comment présenter une chercheuse qui conteste les promesses d'une entreprise ?
+- [ ] Comme « une critique », pour la distinguer des experts
+- [x] Par son expertise réelle : chercheuse, analyste, universitaire, praticienne
+- [ ] Sans mentionner sa fonction, pour rester neutre
+> Opposer « experts » et « critiques » fait pencher la crédibilité du côté de ceux qui promeuvent la nouveauté. Les voix critiques ont souvent une connaissance du domaine au moins aussi solide.
+
+Q: Pour un sujet sur une start-up de VTC, quelles sources le cours recommande-t-il ?
+- [ ] Les fondateurs et les investisseurs, qui connaissent le mieux le projet
+- [x] Les fondateurs, mais aussi les chauffeurs, les syndicats de taxis et des passagers de milieux différents
+- [ ] Uniquement des utilisateurs de l'application
+> Diversifier les sources, c'est aller chercher celles et ceux qui vivent la technologie en pratique, et qui dépendent le plus de ses défaillances.
+```
+
+## Boîte à outils Synth
+
+*Exercices ajoutés par Synth, absents du cours original de la DW Akademie.*
+
+### Le hype-o-mètre
+
+Évaluez chaque titre de 0 (factuel) à 3 (hype pur), puis comparez avec notre lecture, fondée sur les notions du cours. Les titres sont fictifs, construits pour l'entraînement.
+
+```hypemetre
+Une IA écrit un roman en une nuit : les écrivains sont-ils condamnés ? :: 3 :: Prédiction grandiloquente et alarmisme : un cas isolé est généralisé à toute une profession, sur le mode de la catastrophe.
+Le gouvernement annonce un plan de 2 milliards d'euros pour l'intelligence artificielle :: 1 :: Fait vérifiable. À compléter en suivant l'argent : répartition, calendrier, montants réellement nouveaux, bénéficiaires.
+ChatGPT comprend désormais vos émotions :: 3 :: Anthropomorphisme et mot à la mode : le système classe des textes, il ne ressent ni ne comprend. Quelle définition opérationnelle de « comprendre » ?
+Des modérateurs kényans témoignent de leurs conditions de travail pour entraîner des IA :: 0 :: Récit documenté qui donne la parole aux acteurs invisibilisés du hype.
+L'IA va révolutionner l'éducation : les écoles qui n'agissent pas maintenant seront dépassées :: 3 :: Inéluctabilité, prédiction grandiloquente et fausse urgence (*kairos*) réunies.
+Une start-up quantique valorisée à 3 milliards sans chiffre d'affaires :: 2 :: Le titre donne un élément de contexte utile (pas de revenus), mais la valorisation reste une attente d'investisseurs, pas une preuve de valeur.
+Un outil de tri des CV écarte davantage les candidates, selon un audit indépendant :: 0 :: Dommage concret, source indépendante, périmètre précis.
+```
+
+### Check-list avant publication
+
+Cochez au fil de votre relecture. Vos cases restent enregistrées dans ce navigateur.
+
+- [ ] J'ai identifié qui fait l'affirmation, et ce que cette source gagne si on la croit.
+- [ ] Ma liste de sources ne surreprésente pas les personnes qui ont à gagner au succès de la technologie.
+- [ ] J'ai donné la parole à celles et ceux qui vivent la technologie en pratique, ou en subissent les effets.
+- [ ] J'ai suivi l'argent : qui finance, qui en profite, qui supporte les coûts si cela échoue.
+- [ ] Les voix critiques sont présentées par leur expertise réelle, pas comme de simples « critiques ».
+- [ ] Les mots à la mode sont définis en termes concrets et opérationnels.
+- [ ] L'urgence affichée est justifiée par des preuves, pas seulement par la peur de passer à côté.
+- [ ] Les prédictions sont signalées comme telles, avec ce qu'elles supposent pour se réaliser.
+- [ ] Les valorisations et levées de fonds sont comparées aux revenus et à l'impact démontré.
+- [ ] Les limites des études citées figurent dans l'article, pas seulement leurs conclusions.
+- [ ] J'ai vérifié comment des promesses semblables ont été couvertes par le passé, et ce qu'il en est advenu.
+- [ ] Le titre et le chapô ne promettent pas plus que l'article ne démontre.
 
 <!-- module: conclusion | Conclusion -->
 
@@ -1014,3 +1180,5 @@ Trinh, A., Turner, L. Challenging Reward Structures and Organizational Cultures 
 Traduction et adaptation graphique : Synth. Cours original : *The Hype Literacy Toolkit for Journalists*, DW Akademie with support from the German Federal Ministry of Economic Cooperation and Development, [akademie.dw.de/hype-literacy](https://akademie.dw.de/hype-literacy/).
 
 Les fonds photographiques décoratifs de la version originale (images génériques fournies par l'outil de création) ne sont pas repris. Toutes les images de contenu, leurs légendes et leurs crédits le sont.
+
+Les quiz de fin de chapitre, le hype-o-mètre et la check-list avant publication sont des ajouts de Synth, rédigés à partir du contenu du cours. Ils ne figurent pas dans la version originale et n'engagent ni la DW Akademie ni les auteurs du cours.

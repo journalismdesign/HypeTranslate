@@ -57,6 +57,51 @@
       }).join('') + '</div>';
     },
 
+    quiz: function (src, md) {
+      var blocks = src.split(/\n\s*\n/).filter(function (b) { return b.trim(); });
+      return blocks.map(function (block) {
+        var id = uid('q');
+        var question = '';
+        var answers = [];
+        var explanation = [];
+        block.split('\n').forEach(function (line) {
+          var m;
+          if ((m = line.match(/^Q:\s*(.*)$/))) question = m[1];
+          else if ((m = line.match(/^-\s*\[([ xX])\]\s*(.*)$/))) answers.push({ ok: m[1] !== ' ', text: m[2] });
+          else if ((m = line.match(/^>\s?(.*)$/))) explanation.push(m[1]);
+        });
+        return '<fieldset class="quiz" id="' + id + '">' +
+          '<legend><span class="tag">Quiz</span>' + md.inline(question) + '</legend>' +
+          '<div class="answers">' + answers.map(function (a) {
+            return '<button type="button" class="answer" data-ok="' + a.ok + '">' + md.inline(a.text) + '</button>';
+          }).join('') + '</div>' +
+          '<p class="feedback" aria-live="polite" hidden></p>' +
+          '<p class="explanation" hidden>' + md.inline(explanation.join(' ')) + '</p>' +
+          '</fieldset>';
+      }).join('');
+    },
+
+    hypemetre: function (src, md) {
+      var labels = ['Factuel', 'Léger', 'Marqué', 'Hype pur'];
+      var rows = src.split('\n').filter(Boolean).map(function (line) {
+        var parts = line.split('::').map(function (s) { return s.trim(); });
+        return { title: parts[0], score: parseInt(parts[1], 10) || 0, note: parts[2] || '' };
+      });
+      return '<div class="hypemetre">' + rows.map(function (r) {
+        return '<div class="hm-item" data-score="' + r.score + '">' +
+          '<p class="hm-title">« ' + md.inline(r.title) + ' »</p>' +
+          '<div class="hm-scale" role="group" aria-label="Votre note de hype">' +
+          labels.map(function (label, n) {
+            return '<button type="button" class="hm-btn" data-value="' + n + '" title="' + label + '">' +
+              '<span class="hm-num">' + n + '</span><span class="hm-label">' + label + '</span></button>';
+          }).join('') +
+          '</div>' +
+          '<div class="hm-result" aria-live="polite" hidden>' +
+          '<p class="hm-verdict"></p><p>' + md.inline(r.note) + '</p></div>' +
+          '</div>';
+      }).join('') + '</div>';
+    },
+
     section: function (src) {
       var n = parseInt(src, 10) || 0;
       return '<div class="section-num" aria-hidden="true"><span>' + (n < 10 ? '0' : '') + n + '</span></div>';
@@ -217,6 +262,45 @@
       card.addEventListener('click', function () {
         var flipped = card.getAttribute('aria-pressed') === 'true';
         card.setAttribute('aria-pressed', String(!flipped));
+      });
+    });
+
+    root.querySelectorAll('.quiz').forEach(function (quiz) {
+      var feedback = quiz.querySelector('.feedback');
+      var explanation = quiz.querySelector('.explanation');
+      quiz.querySelectorAll('.answer').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var ok = btn.dataset.ok === 'true';
+          quiz.querySelectorAll('.answer').forEach(function (b) {
+            b.classList.remove('is-wrong');
+            if (b.dataset.ok === 'true' && ok) b.classList.add('is-right');
+          });
+          btn.classList.add(ok ? 'is-right' : 'is-wrong');
+          feedback.hidden = false;
+          feedback.textContent = ok ? 'Bonne réponse.' : 'Pas tout à fait. Essayez encore, ou lisez l\u2019explication.';
+          feedback.className = 'feedback ' + (ok ? 'ok' : 'ko');
+          explanation.hidden = false;
+        });
+      });
+    });
+
+    root.querySelectorAll('.hm-item').forEach(function (item) {
+      var expected = parseInt(item.dataset.score, 10);
+      var result = item.querySelector('.hm-result');
+      var verdict = item.querySelector('.hm-verdict');
+      item.querySelectorAll('.hm-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var value = parseInt(btn.dataset.value, 10);
+          item.querySelectorAll('.hm-btn').forEach(function (b) {
+            b.classList.toggle('is-chosen', b === btn);
+            b.classList.toggle('is-expected', parseInt(b.dataset.value, 10) === expected);
+          });
+          var gap = Math.abs(value - expected);
+          verdict.textContent = gap === 0
+            ? 'Même lecture que la nôtre (' + expected + '/3).'
+            : 'Notre lecture : ' + expected + '/3 (écart de ' + gap + ').';
+          result.hidden = false;
+        });
       });
     });
 

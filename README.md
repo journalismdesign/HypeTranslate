@@ -30,6 +30,10 @@ Tout se passe dans `contenu/hype-literacy.fr.md`. La syntaxe des chapitres et de
 (images, galeries, carrousel, vidéos, encadrés, citations, cartes, accordéon, tri,
 image annotée, tableaux) est décrite en tête du fichier.
 
+Les quiz de fin de chapitre, le hype-o-mètre et la check-list (fin du chapitre 5) sont
+des ajouts de Synth, signalés comme tels dans le parcours : ils ne figurent ni dans le
+cours en ligne ni dans son export PDF.
+
 ## Mettre à jour depuis le cours original
 
 Le cours de la DW Akademie est un export Articulate Rise : tout son contenu est dans
