@@ -22,7 +22,8 @@
       cartes         une carte par ligne : Recto :: Verso
       accordeon      « + Titre » puis le contenu (markdown) jusqu'au titre suivant
       tri            une catégorie par ligne : Catégorie :: élément | élément | …
-      quiz           Q: question / - [ ] mauvaise réponse / - [x] bonne réponse / > explication
+      quiz           titre: … (bandeau de la messagerie), puis
+                     Q: question / - [ ] mauvaise réponse / - [x] bonne réponse / > explication
                      (plusieurs questions séparées par une ligne vide)
       hypemetre      un titre par ligne : Titre :: note de 0 à 3 :: commentaire
   - Une liste de cases « - [ ] » devient une check-list cochable, mémorisée dans le navigateur.
@@ -276,11 +277,9 @@ titre: Building the Netherlands' National Quantum Ecosystem animation: « Everyt
 source: https://www.youtube.com/watch?v=dE9Sp41_Fbg&t=24s
 ```
 
-## Quiz : testez vos acquis
-
-*Exercice ajouté par Synth, absent du cours original de la DW Akademie.*
-
 ```quiz
+titre: Quiz : testez vos acquis
+
 Q: Selon le cours, le hype est-il un processus naturel ?
 - [ ] Oui : il suit les étapes du cycle de Gartner
 - [x] Non : il est fabriqué stratégiquement par les entreprises technologiques, les agences de RP et leurs dirigeants
@@ -399,11 +398,9 @@ La technologie se voit conférer le statut d'un rédempteur sublime qu'il faut e
 
 Tout cela renvoie à la dimension politique du hype, que nous aborderons au chapitre suivant.
 
-## Quiz : testez vos acquis
-
-*Exercice ajouté par Synth, absent du cours original de la DW Akademie.*
-
 ```quiz
+titre: Quiz : testez vos acquis
+
 Q: Qu'appelle-t-on le *leapfrogging*, ou « saut technologique » ?
 - [ ] Le passage rapide d'une technologie du laboratoire au marché
 - [x] L'idée que les pays du Sud global pourraient sauter des étapes du développement en adoptant directement les technologies les plus récentes
@@ -566,11 +563,9 @@ Les motivations du hype sont stratégiques. Pour certains acteurs, il est une vo
 
 Comprendre ces motivations, et voir qui produit, qui amplifie et ce que le hype dissimule, aide les journalistes à saisir que le hype n'est pas un simple enthousiasme : il est à la fois un enjeu et un instrument de pouvoir.
 
-## Quiz : testez vos acquis
-
-*Exercice ajouté par Synth, absent du cours original de la DW Akademie.*
-
 ```quiz
+titre: Quiz : testez vos acquis
+
 Q: Face à une affirmation technologique fracassante, quelle question le cours recommande-t-il de poser ?
 - [ ] Est-ce techniquement possible ?
 - [x] Que gagnent-ils si on les croit ?
@@ -708,11 +703,9 @@ La vulnérabilité au hype ne tient que pour une part aux mauvais choix de tel o
 
 L'objectif n'est pas de supprimer l'urgence ni de cesser de couvrir les évolutions émergentes, mais de savoir repérer les moments où ces pressions structurelles risquent le plus d'égarer les journalistes, et de se doter de stratégies (que nous verrons au chapitre suivant) pour garder une distance critique, même sous la pression du bouclage.
 
-## Quiz : testez vos acquis
-
-*Exercice ajouté par Synth, absent du cours original de la DW Akademie.*
-
 ```quiz
+titre: Quiz : testez vos acquis
+
 Q: Qu'est-ce que le *churnalism* ?
 - [ ] Le journalisme de données appliqué aux marchés financiers
 - [x] La pratique qui consiste à republier des communiqués de presse avec un minimum de travail journalistique supplémentaire
@@ -900,11 +893,9 @@ Les technologies du passé, du chemin de fer et de l'électricité à l'ordinate
 - Comment cette technologie (ou une technologie comparable) était-elle traitée il y a cinq, dix ou vingt ans ?
 - Quelles voix ont été amplifiées ou ignorées dans la couverture passée, et comment cela a-t-il façonné la compréhension du public ?
 
-## Quiz : testez vos acquis
-
-*Exercice ajouté par Synth, absent du cours original de la DW Akademie.*
-
 ```quiz
+titre: Quiz : testez vos acquis
+
 Q: Une start-up annonce une levée de fonds record. Qu'est-ce que cela prouve ?
 - [ ] Que sa technologie fonctionne
 - [ ] Que son marché est assuré

@@ -45,7 +45,11 @@
   function uid(prefix) { return prefix + '-' + (++counter); }
 
   var chatData = {};
-  var EYE_SVG = '<img src="assets/mark-eye-cyan.png" alt="" width="22" height="14">';
+  // Signatures des bulles : Synth. (logo) pour les questions, le lecteur pour les réponses
+  var AVATAR = {
+    bot: '<span class="chat-avatar chat-avatar-bot"><img src="assets/mark-eye-cyan.png" alt="Synth." width="22" height="14"></span>',
+    me: '<span class="chat-avatar chat-avatar-me"><img src="assets/avatar-lecteur.svg" alt="Vous" width="32" height="32"></span>'
+  };
 
   var handlers = {
     cartes: function (src, md) {
@@ -65,6 +69,8 @@
     // le déroulé (frappe, bulles, réponses) est joué par bindInteractions.
     quiz: function (src, md) {
       var id = uid('chat');
+      var title = 'Quiz';
+      src = src.replace(/^titre:\s*(.*)\n?/, function (_, t) { title = t.trim(); return ''; });
       var questions = src.split(/\n\s*\n/).filter(function (b) { return b.trim(); }).map(function (block) {
         var q = { text: '', answers: [], explanation: [] };
         block.split('\n').forEach(function (line) {
@@ -81,13 +87,12 @@
         };
       });
       chatData[id] = questions;
-      return '<section class="chat" id="' + id + '" aria-label="Quiz en conversation">' +
+      return '<section class="chat" id="' + id + '" aria-label="' + md.escape(title) + '">' +
         '<header class="chat-head">' +
-        '<span class="chat-avatar" aria-hidden="true">' + EYE_SVG + '</span>' +
-        '<span class="chat-name">Synth.<small>Quiz · ' + questions.length + ' questions</small></span>' +
+        '<span class="chat-name">' + md.inline(title) + '<small>' + questions.length + ' questions</small></span>' +
         '<span class="chat-score" aria-live="polite">0 / ' + questions.length + '</span>' +
         '</header>' +
-        '<div class="chat-log" role="log" aria-live="polite"></div>' +
+        '<div class="chat-log" role="log" aria-live="polite"><p class="chat-system">Aujourd\u2019hui</p></div>' +
         '<div class="chat-replies" role="group" aria-label="Vos réponses"></div>' +
         '</section>';
     },
@@ -420,26 +425,44 @@
 
     function scrollLog() { log.scrollTop = log.scrollHeight; }
 
-    function bubble(side, html) {
-      var row = document.createElement('div');
-      row.className = 'chat-row chat-' + side;
+    function clock() {
+      var d = new Date();
+      return (d.getHours() < 10 ? '0' : '') + d.getHours() + ':' + (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
+    }
+
+    // Une ligne de conversation : avatar en bas, colonne de bulle à côté.
+    function row(side, extraClass) {
+      var r = document.createElement('div');
+      r.className = 'chat-row chat-' + side + (extraClass ? ' ' + extraClass : '');
+      r.innerHTML = AVATAR[side] + '<div class="chat-col"></div>';
+      log.appendChild(r);
+      scrollLog();
+      return r;
+    }
+
+    function bubble(side, html, label) {
+      var r = row(side);
+      var col = r.querySelector('.chat-col');
+      if (label) col.insertAdjacentHTML('beforeend', '<span class="chat-step">' + label + '</span>');
       var b = document.createElement('div');
       b.className = 'chat-bubble';
-      if (html !== undefined) b.innerHTML = html;
-      row.appendChild(b);
-      log.appendChild(row);
+      var text = document.createElement('span');
+      text.className = 'chat-text';
+      if (html !== undefined) text.innerHTML = html;
+      b.appendChild(text);
+      b.insertAdjacentHTML('beforeend', '<span class="chat-meta">' + clock() +
+        (side === 'me' ? ' <svg class="chat-ticks" width="16" height="10" viewBox="0 0 16 10" aria-label="lu" role="img"><path d="M1 5.5l3 3L10.5 1.5M6.5 8.5l1 0.2L14.5 1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>' : '') + '</span>');
+      col.appendChild(b);
       scrollLog();
-      return b;
+      return text;
     }
 
     function typing(side) {
-      var row = document.createElement('div');
-      row.className = 'chat-row chat-' + side + ' chat-typing-row';
-      row.innerHTML = '<div class="chat-bubble chat-typing" aria-label="' +
+      var r = row(side, 'chat-typing-row');
+      r.querySelector('.chat-col').innerHTML = '<div class="chat-bubble chat-typing" aria-label="' +
         (side === 'bot' ? 'Synth. écrit…' : 'À vous de répondre') + '"><i></i><i></i><i></i></div>';
-      log.appendChild(row);
       scrollLog();
-      return row;
+      return r;
     }
 
     // La question se tape lettre à lettre, puis prend sa mise en forme définitive.
@@ -482,8 +505,7 @@
       var dots = typing('bot');
       wait(650).then(function () {
         dots.remove();
-        var b = bubble('bot');
-        b.insertAdjacentHTML('beforebegin', '<span class="chat-step">Question ' + (index + 1) + ' / ' + questions.length + '</span>');
+        var b = bubble('bot', '', 'Question ' + (index + 1) + ' / ' + questions.length);
         return typeInto(b, q.plain, q.html);
       }).then(function () {
         // Les trois réponses apparaissent avec la bulle « en train d'écrire » côté lecteur.
@@ -516,7 +538,7 @@
         bubble('bot', '<strong>Score : ' + score + ' / ' + questions.length + '.</strong> ' +
           (all ? 'Sans faute. Le hype ne vous aura pas.' : 'Relisez le chapitre pour les points manqués, puis retentez votre chance.'));
         chips([{ html: 'Recommencer', primary: true }], function () {
-          log.innerHTML = '';
+          log.innerHTML = '<p class="chat-system">Aujourd\u2019hui</p>';
           score = 0;
           scoreEl.textContent = '0 / ' + questions.length;
           ask(0);

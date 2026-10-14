@@ -878,3 +878,52 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .chat .chat-chip.is-primary { background: var(--synth-cyan); border-color: var(--synth-cyan); color: #000; }
 .chat-avatar { border-color: var(--synth-cyan); }
 .chat-avatar img { display: block; }
+
+/* ---------- Mise en page messagerie : avatars, heure, accusé de lecture ---------- */
+.chat-head { min-height: 56px; }
+.chat-name { font-size: 18px; }
+.chat-system {
+  align-self: center; margin: 0 0 var(--space-2);
+  font-size: var(--text-xxs); letter-spacing: var(--track-label); text-transform: uppercase;
+  color: var(--chat-muted);
+}
+.chat-row {
+  flex-direction: row; align-items: flex-end; gap: var(--space-2);
+  max-width: 88%;
+}
+.chat-me { flex-direction: row-reverse; }
+.chat-col { display: flex; flex-direction: column; min-width: 0; }
+.chat-bot .chat-col { align-items: flex-start; }
+.chat-me .chat-col { align-items: flex-end; }
+
+.chat-avatar {
+  flex: none; width: 32px; height: 32px;
+  display: grid; place-content: center; overflow: hidden;
+  border: 0;
+}
+.chat-avatar-bot { background: #000; }                 /* signature Synth. : œil cyan sur noir */
+.chat-avatar-me img { width: 32px; height: 32px; display: block; object-fit: cover; }
+
+.chat-bubble { display: flex; flex-direction: column; gap: 2px; }
+.chat-meta {
+  align-self: flex-end;
+  font-size: 10px; line-height: 1; letter-spacing: .02em;
+  color: var(--chat-muted);
+}
+.chat-me .chat-meta { color: rgba(0, 0, 0, .6); }
+.chat-ticks { color: #00332d; margin-left: 3px; vertical-align: -1px; }
+.chat-typing { flex-direction: row; }
+.chat-bubble.is-typing::after { content: none; }
+.chat-text.is-typing::after {
+  content: ""; display: inline-block; width: .55em; height: 1.05em; margin-left: 2px;
+  vertical-align: text-bottom; background: var(--chat-accent-ink);
+  animation: chat-caret .8s steps(1) infinite;
+}
+/* Réponses proposées : alignées sur la colonne des bulles du lecteur (avatar de 32 px + espace) */
+.chat-replies { padding-right: calc(var(--space-4) + 32px + var(--space-2)); }
+
+@media (max-width: 560px) {
+  .chat-row { max-width: 96%; }
+  .chat-avatar, .chat-avatar-me img { width: 28px; height: 28px; }
+  .chat-replies { padding-right: calc(var(--space-4) + 28px + var(--space-2)); }
+}
