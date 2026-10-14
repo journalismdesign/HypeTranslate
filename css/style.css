@@ -1388,3 +1388,105 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .section-num .sn-num > span { padding: 0; border: 0; font-size: inherit; letter-spacing: 0; color: inherit; }
 .section-num .sn-num, .section-num .sn-num > span { font-family: var(--font-poster); }
+
+/* =====================================================================
+   Palette « sarcelle » : remplace les aplats noirs des encarts et ouvertures.
+   Tirée de l'encre cyan de la charte (#00332D) ; le cyan #00FFE0 reste l'accent.
+   Le bandeau du site (header Synth) garde son noir, constante de marque.
+   ===================================================================== */
+:root {
+  --field: #0f3b36;          /* grands aplats : ouvertures, bandeaux, tapis */
+  --field-deep: #0a2c28;
+  --field-ink: #f3fbf9;
+  --field-muted: #9cc9c1;
+  --field-line: rgba(156, 201, 193, .28);
+  --encart: #e6f5f1;         /* encarts clairs (vue d'ensemble, notes) */
+  --encart-ink: #0d2a26;
+  --encart-muted: #3d6660;
+  --encart-line: #b9ddd5;
+  --paper: #f6f4ef;          /* papier chaud du thème clair */
+}
+[data-theme="light"] {
+  --surface-page: var(--paper);
+  --surface-raised: #fbfaf7;
+  --surface-card: #eeebe3;
+  --surface-card-hover: #e6e2d8;
+  --surface-inset: #f1eee7;
+}
+:root:not([data-theme="light"]) {
+  --surface-page: #0b1312;
+  --surface-raised: #0f1918;
+  --surface-card: #13201e;
+  --surface-card-hover: #182826;
+  --surface-inset: #0d1716;
+  --encart: #12302c;
+  --encart-ink: #e9f6f3;
+  --encart-muted: #9cc9c1;
+  --encart-line: #1f4a44;
+}
+body { background: var(--surface-page); }
+
+/* Motif diamant fondu dans la sarcelle */
+.ch-hero, .module-accueil .hero {
+  background: var(--texture-diamond) center / cover no-repeat, var(--field);
+  background-blend-mode: soft-light;
+  color: var(--field-ink);
+  border-bottom: 0;
+}
+.ch-title, .module-accueil .hero h1 { color: var(--field-ink); }
+.ch-facts { background: var(--field-deep); border-top-color: var(--field-line); }
+.ch-facts > div { border-color: var(--field-line); }
+.ch-facts dt { color: var(--field-muted); }
+.module-accueil .hero h2 { color: var(--field-muted); }
+
+/* Vue d'ensemble : encart clair, numéro en sarcelle */
+.overview {
+  background: var(--encart); color: var(--encart-ink);
+  border: 1px solid var(--encart-line);
+  outline: 1px solid var(--encart-line); outline-offset: -8px;
+  box-shadow: none;
+}
+.overview::before { content: none; }
+.overview-side { border-right-color: var(--encart-line); }
+.overview-label { color: var(--encart-muted); }
+.overview-num { -webkit-text-stroke: 1.5px var(--encart-ink); }
+.overview-main p { color: var(--encart-ink); }
+.overview-lead { color: var(--encart-muted) !important; }
+.overview-goals li { background: rgba(255, 255, 255, .55); border-color: var(--encart-line); color: var(--encart-ink); }
+.overview-goal-n { color: var(--encart-muted); }
+:root:not([data-theme="light"]) .overview-goals li { background: rgba(255, 255, 255, .04); }
+:root:not([data-theme="light"]) .overview-num { -webkit-text-stroke-color: var(--synth-cyan); }
+:root:not([data-theme="light"]) .overview-goal-n { color: var(--synth-cyan); }
+
+/* Notes et citations : même famille d'encarts */
+.note, .citation { background: var(--encart); color: var(--encart-ink); border-color: var(--encart-line); outline-color: var(--encart-line); }
+.note p, .citation p, .citation-text { color: var(--encart-ink); }
+.citation figcaption { color: var(--encart-muted); }
+
+/* Bandeau du quiz, tiroir du carnet, vidéos */
+.chat-head, .carnet-head { background: var(--field); border-bottom-color: var(--field-deep); color: var(--field-ink); }
+.chat-name small, .carnet-kicker { color: var(--field-muted); }
+.chat-avatar-bot { background: var(--field); }
+.video-play { background: var(--texture-diamond) center / cover, var(--field); background-blend-mode: soft-light; border-color: var(--field-line); }
+.video-hint { color: var(--field-muted); }
+
+/* Tapis de jeu du paquet de cartes */
+.deck {
+  background: radial-gradient(120% 90% at 50% 0%, #1b5a52 0%, var(--field) 55%, var(--field-deep) 100%);
+  border-color: var(--field-deep);
+}
+.dcard-back, .dcard-backface { background-color: var(--field-deep); }
+.deck-hint { color: var(--field-muted); }
+.pile { background: rgba(255, 255, 255, .05); border-color: rgba(0, 255, 224, .4); }
+.parade.is-locked { background: rgba(255, 255, 255, .05); border-color: var(--field-line); outline-color: transparent; }
+.parade { background: var(--paper); }
+/* Le motif diamant (gris sombre) éclaircit légèrement la sarcelle au lieu de l'assombrir */
+.ch-hero, .module-accueil .hero, .video-play { background: var(--field); background-blend-mode: normal; }
+.ch-hero::before, .module-accueil .hero::before, .video-play::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: var(--texture-diamond) center / cover no-repeat;
+  mix-blend-mode: screen; opacity: .55;
+}
+.module-accueil .hero::after { content: none; }
+.video-play { position: relative; }
+.video-play > * , .ch-hero > * { position: relative; }
