@@ -89,13 +89,9 @@ Avant tout, une fascination pour l'avenir. Dans la hype, des promesses de créat
 
 On la tient d'ordinaire pour un processus naturel. La hype n'a pourtant jamais rien d'accidentel. Entreprises technologiques, agences de relations publiques et leurs dirigeants la fabriquent de manière stratégique, pour surestimer les effets positifs d'une technologie tout en minimisant ses effets négatifs.
 
-Dans ce processus, les médias et le journalisme jouent un rôle essentiel. Ils amplifient la hype, la font circuler dans la société. Exemple avec quelques couvertures récentes de grands titres de presse, aux manchettes spectaculaires sur l'IA.
+Dans ce processus, les médias et le journalisme jouent un rôle essentiel. Ils amplifient la hype, la font circuler dans la société. Il suffit de regarder les couvertures de grands titres de presse en 2025, le *Daily Mail*, *DER SPIEGEL*, *TIME* ou *The Times*, aux manchettes spectaculaires sur l'IA.
 
-```image
-assets/cours/bildschirmfoto-2025-12-17-um-10-29-34.jpg :: Couvertures 2025 de grandes publications comme le *Daily Mail*, *DER SPIEGEL*, *TIME* et *The Times*.
-```
-
-Ces titres le montrent. La hype exploite l'incertitude et des émotions comme l'espoir et la peur, en les associant à de fortes attentes. Formules et images de couverture font de l'IA tantôt une menace capable de dominer l'humanité, tantôt la promesse de libérer l'humanité des tâches fastidieuses.
+Ces manchettes le montrent. La hype exploite l'incertitude et des émotions comme l'espoir et la peur, en les associant à de fortes attentes. Formules et images de couverture font de l'IA tantôt une menace capable de dominer l'humanité, tantôt la promesse de libérer l'humanité des tâches fastidieuses.
 
 Affirmations fortes, attention assurée. En mettant en avant le pouvoir de transformation de l'IA, ces affirmations légitiment au passage certains points de vue et certains scénarios, ou offrent une tribune à certaines figures et à leur prétendue expertise.
 
