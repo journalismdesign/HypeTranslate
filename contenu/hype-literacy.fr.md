@@ -41,10 +41,6 @@
 
 ## Boîte à outils pour journalistes
 
-```image
-assets/cours/ai4media-banner.jpg ::
-```
-
 Ce cours aborde l'étude de la hype. Une force pressante, qui façonne le développement technologique, l'économie, la politique et le journalisme. Pensé pour les professionnels du journalisme et des médias, il peut d'ailleurs servir d'introduction à la hype pour toute personne que le sujet intéresse, étudiants, designers, universitaires ou auteurs.
 
 Les informations qui circulent autour des technologies émergentes, l'IA, le quantique ou les nouveaux voyages spatiaux, promettent une transformation radicale. Problème, ces récits répètent les promesses de l'industrie et les visions apocalyptiques sans les interroger. Ces temps-ci, les titres annoncent par exemple que « l'IA va tout changer ». Présentée comme une « force révolutionnaire » ou une « menace mortelle », l'IA y est même traitée comme une entité quasi divine. Une grande partie du paysage médiatique s'est muée en amplificateur de la hype, dépourvu d'esprit critique. Or la hype n'a rien de neutre.
