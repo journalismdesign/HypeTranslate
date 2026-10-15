@@ -6,7 +6,11 @@
 (function () {
   'use strict';
 
-  var CONTENT_URL = 'contenu/hype-literacy.fr.md';
+  // Les deux parcours vivent dans deux fichiers : la traduction de la DW et le contenu original de Synth.
+  var CONTENT_URLS = ['contenu/hype-literacy.fr.md', 'contenu/parcours-synth.fr.md'];
+  // Ordre des rubriques du sommaire (les modules sans rubrique, comme l'accueil, viennent en tête).
+  var GROUP_ORDER = ['', 'Parcours DW Akademie', 'Parcours Synth', 'Annexes'];
+  var GROUP_RE = /<!--\s*groupe:\s*(.*?)\s*-->/g;
   var STORE_KEY = 'synth-hype-literacy';
   var MODULE_RE = /<!--\s*module:\s*([\w-]+)\s*\|\s*(.*?)\s*-->/g;
 
@@ -187,6 +191,11 @@
         '</section>';
     },
 
+    // Registre des promesses : coquille vide, remplie et animée par Atelier.registre.
+    registre: function () {
+      return '<section class="registre" aria-label="Registre des promesses"><p class="registre-noscript">Le registre nécessite JavaScript.</p></section>';
+    },
+
     // Questions à se poser : chacune peut rejoindre le carnet du lecteur.
     questions: function (src, md) {
       var lines = src.split('\n').filter(function (l) { return l.trim(); });
@@ -360,13 +369,14 @@
     });
 
     root.querySelectorAll('.overview-num').forEach(function (el) {
-      var n = (moduleId.match(/chapitre-(\d+)/) || [])[1];
+      var n = (moduleId.match(/(?:chapitre|synth)-(\d+)/) || [])[1];
       el.textContent = n ? (n < 10 ? '0' : '') + n : '';
     });
     if (window.Atelier) {
       Atelier.overview(root);
       root.querySelectorAll('.deck').forEach(function (box) { Atelier.deck(box, deckData[box.id]); });
       Atelier.questions(root);
+      if (Atelier.registre) Atelier.registre(root);
     }
 
     root.querySelectorAll('.chat').forEach(function (box) { startChat(box, chatData[box.id] || [], moduleId); });
@@ -673,15 +683,43 @@
 
   function parseModules(src) {
     var found = [];
+    var groups = [];
     var match;
+    GROUP_RE.lastIndex = 0;
+    while ((match = GROUP_RE.exec(src))) groups.push({ at: match.index, name: match[1] });
     MODULE_RE.lastIndex = 0;
     while ((match = MODULE_RE.exec(src))) {
       found.push({ id: match[1], title: match[2], start: match.index + match[0].length, tagStart: match.index });
     }
     return found.map(function (m, idx) {
       var end = idx + 1 < found.length ? found[idx + 1].tagStart : src.length;
-      return { id: m.id, title: m.title, body: src.slice(m.start, end).trim() };
+      var group = '';
+      groups.forEach(function (g) { if (g.at < m.tagStart) group = g.name; });
+      // le corps s'arrête avant un éventuel marqueur de rubrique
+      var body = src.slice(m.start, end).replace(/<!--\s*groupe:[\s\S]*$/, '').trim();
+      return { id: m.id, title: m.title, body: body, group: group };
     });
+  }
+
+  // Assemble les fichiers et range les modules par rubrique, en gardant l'ordre de chaque fichier.
+  function assemble(sources) {
+    var all = [];
+    sources.forEach(function (src) { all = all.concat(parseModules(src)); });
+    return all.map(function (m, i) { return { m: m, i: i }; }).sort(function (a, b) {
+      var ga = GROUP_ORDER.indexOf(a.m.group), gb = GROUP_ORDER.indexOf(b.m.group);
+      if (ga === -1) ga = GROUP_ORDER.length;
+      if (gb === -1) gb = GROUP_ORDER.length;
+      return ga - gb || a.i - b.i;
+    }).map(function (x) { return x.m; });
+  }
+
+  // Numéro et effectif d'un module dans sa série (chapitres DW ou modules Synth).
+  function seriesInfo(id) {
+    var m = id.match(/^(chapitre|synth)-(\d+)$/);
+    if (!m) return null;
+    var prefix = m[1];
+    var total = modules.filter(function (x) { return new RegExp('^' + prefix + '-\\d+$').test(x.id); }).length;
+    return { n: +m[2], total: total, kicker: prefix === 'synth' ? 'Parcours Synth' : 'Chapitre', label: prefix === 'synth' ? 'Synth' : 'Chapitre' };
   }
 
   // Modules comptés dans la progression : les chapitres et la conclusion.
@@ -692,7 +730,13 @@
   /* ---------- Rendu ---------- */
 
   function renderToc(currentId) {
+    var lastGroup = null;
     toc.innerHTML = modules.map(function (m) {
+      var head = '';
+      if (m.group !== lastGroup) {
+        lastGroup = m.group;
+        if (m.group) head = '<li class="toc-group" aria-hidden="true"><span>' + MiniMarkdown.escape(m.group) + '</span></li>';
+      }
       var cls = [];
       if (m.id === currentId) cls.push('is-current');
       if (state.lus[m.id]) cls.push('is-read');
@@ -700,7 +744,7 @@
       if (q) cls.push(q);
       var r = state.quiz[m.id];
       var badge = r ? '<span class="toc-quiz" aria-label="Quiz : ' + r.score + ' sur ' + r.total + '">' + r.score + '/' + r.total + '</span>' : '';
-      return '<li class="' + cls.join(' ') + '"><a href="#/' + m.id + '"' +
+      return head + '<li class="' + cls.join(' ') + '"><a href="#/' + m.id + '"' +
         (m.id === currentId ? ' aria-current="page"' : '') + '><span class="toc-title">' +
         MiniMarkdown.escape(m.title) + '</span>' + badge + '</a></li>';
     }).join('');
@@ -747,17 +791,17 @@
     main.innerHTML = html;
     // Direction artistique « affiche » : ouverture, rails de marge, révélations au défilement
     if (window.Atelier) {
-      var chapters = modules.filter(function (m) { return /^chapitre-/.test(m.id); });
-      var chNum = (mod.id.match(/^chapitre-(\d+)/) || [])[1];
+      var info = seriesInfo(mod.id);
+      var pad2 = function (n) { return (n < 10 ? '0' : '') + n; };
       var article = main.querySelector('.module');
       Atelier.chapterHero(article, {
-        chapter: chNum ? +chNum : 0,
-        total: chapters.length,
-        kicker: chNum ? 'Chapitre' : 'Littératie du hype'
+        chapter: info ? info.n : 0,
+        total: info ? info.total : 0,
+        kicker: info ? info.kicker : (mod.group || 'Littératie du hype')
       });
       Atelier.rails(main, [
-        chNum ? 'Chapitre ' + (chNum < 10 ? '0' : '') + chNum + ' / ' + (chapters.length < 10 ? '0' : '') + chapters.length : mod.title,
-        'Littératie du hype',
+        info ? info.label + ' ' + pad2(info.n) + ' / ' + pad2(info.total) : mod.title,
+        mod.group || 'Littératie du hype',
         mod.title,
         'Synth.'
       ]);
@@ -818,19 +862,20 @@
 
   /* ---------- Démarrage ---------- */
 
-  fetch(CONTENT_URL)
-    .then(function (res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+  Promise.all(CONTENT_URLS.map(function (url) {
+    return fetch(url).then(function (res) {
+      if (!res.ok) throw new Error(url + ' : HTTP ' + res.status);
       return res.text();
-    })
-    .then(function (src) {
-      modules = parseModules(src);
+    });
+  }))
+    .then(function (sources) {
+      modules = assemble(sources);
       window.addEventListener('hashchange', function () { show(currentId()); });
       show(currentId());
     })
     .catch(function (err) {
       main.innerHTML = '<div class="error"><h1>Contenu introuvable</h1>' +
-        '<p>Le fichier <code>' + CONTENT_URL + '</code> n\u2019a pas pu être chargé (' + MiniMarkdown.escape(err.message) + ').</p>' +
+        '<p>Les fichiers de contenu n\u2019ont pas pu être chargés (' + MiniMarkdown.escape(err.message) + ').</p>' +
         '<p>Si vous ouvrez <code>index.html</code> directement depuis votre disque, le navigateur bloque la lecture du fichier. ' +
         'Lancez un petit serveur local dans le dossier du projet, par exemple <code>python3 -m http.server</code>, ' +
         'puis ouvrez <code>http://localhost:8000</code>.</p></div>';

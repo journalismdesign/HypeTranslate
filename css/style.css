@@ -1490,3 +1490,68 @@ body { background: var(--surface-page); }
 .module-accueil .hero::after { content: none; }
 .video-play { position: relative; }
 .video-play > * , .ch-hero > * { position: relative; }
+
+/* =================================================================
+   Sommaire : rubriques (Parcours DW Akademie, Parcours Synth, Annexes)
+   Chaque rubrique recommence sa numérotation.
+   ================================================================= */
+.toc li.toc-group {
+  counter-increment: none; counter-set: toc 0;
+  margin: var(--space-5) 0 var(--space-1);
+  padding: 0 var(--space-3) var(--space-2);
+  font-family: var(--font-mono, "IBM Plex Mono", monospace);
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--text-muted, #8a8a8a);
+  border-bottom: 2px solid var(--synth-cyan, #00ffe0);
+}
+.toc li.toc-group:first-child { margin-top: 0; }
+
+/* =================================================================
+   Registre des promesses (Parcours Synth, module 5)
+   ================================================================= */
+.registre {
+  margin: var(--space-6) 0; background: var(--paper); color: #0a0a0a;
+  border: 2px solid var(--field); outline: 1px solid var(--field); outline-offset: 4px;
+}
+.registre-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2) var(--space-4); padding: var(--space-4) var(--space-5); background: var(--field); color: var(--field-ink, #fff); }
+.registre-kicker { font: 600 11px/1 "IBM Plex Mono", monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--field-muted); }
+.registre-head h3 { flex: 1 1 auto; margin: 0; font-size: 26px; color: #fff; }
+.registre-count { font: 12px/1 "IBM Plex Mono", monospace; color: var(--synth-cyan, #00ffe0); }
+.registre-form { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-3); padding: var(--space-5); border-bottom: 1px solid rgba(0, 0, 0, .12); }
+.registre-form label { display: flex; flex-direction: column; gap: 4px; font: 11px/1.2 "IBM Plex Mono", monospace; letter-spacing: .06em; text-transform: uppercase; color: #3a4a47; }
+.registre-form .rg-wide { grid-column: 1 / -1; }
+.registre-form input, .registre-form textarea, .rg-statut select {
+  font-family: inherit; font-size: 15px; line-height: 1.4; text-transform: none; letter-spacing: 0;
+  padding: 8px 10px; border: 1px solid rgba(0, 0, 0, .25); border-radius: 0; background: #fff; color: #0a0a0a;
+}
+.registre-form textarea { resize: vertical; font-size: 16px; }
+.registre-form input:focus, .registre-form textarea:focus, .rg-statut select:focus { outline: 2px solid var(--field); outline-offset: 1px; }
+.registre-add { grid-column: 1 / -1; justify-self: start; }
+.registre-add, .registre-actions button {
+  font: 600 13px/1 "IBM Plex Mono", monospace; padding: 11px 16px; cursor: pointer;
+  border: 2px solid var(--field); background: var(--field); color: #fff;
+}
+.registre-add:hover { background: var(--synth-cyan, #00ffe0); border-color: var(--synth-cyan, #00ffe0); color: #000; }
+.registre-list { list-style: none; margin: 0; padding: 0; }
+.registre-empty { padding: var(--space-5); color: #4a5a57; font-style: italic; }
+.rg-item { display: flex; gap: var(--space-4); align-items: flex-start; justify-content: space-between; padding: var(--space-4) var(--space-5); border-bottom: 1px solid rgba(0, 0, 0, .1); border-left: 4px solid transparent; }
+.rg-item.is-due { border-left-color: #8e1b1b; background: #fbeeee; }
+.rg-item[data-statut="Tenue"] { border-left-color: #0f8f7f; }
+.rg-item[data-statut="Non tenue"], .rg-item[data-statut="Abandonnée"] { border-left-color: #ffb300; }
+.rg-main { min-width: 0; }
+.rg-flag { display: inline-block; margin-bottom: 6px; padding: 3px 7px; background: #8e1b1b; color: #fff; font: 600 11px/1 "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; }
+.rg-promesse { margin: 0 0 4px; font-size: 17px; line-height: 1.4; color: #0a0a0a; }
+.rg-meta { margin: 0; font: 12px/1.5 "IBM Plex Mono", monospace; color: #4a5a57; }
+.rg-meta a { color: var(--field); }
+.rg-side { display: flex; align-items: center; gap: var(--space-2); flex: none; }
+.rg-statut select { font-size: 13px; padding: 6px 8px; }
+.rg-remove { width: 32px; height: 32px; border: 1px solid rgba(0, 0, 0, .2); background: transparent; color: #0a0a0a; font-size: 18px; cursor: pointer; }
+.rg-remove:hover { background: #8e1b1b; color: #fff; border-color: #8e1b1b; }
+.registre-actions { display: flex; gap: var(--space-2); padding: var(--space-4) var(--space-5) 0; }
+.registre-actions .registre-clear { background: transparent; color: var(--field); }
+.registre-status { min-height: 1.4em; margin: 0; padding: var(--space-2) var(--space-5) var(--space-4); font: 12px/1.4 "IBM Plex Mono", monospace; color: #4a5a57; }
+@media (max-width: 720px) {
+  .registre-form { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); padding: var(--space-4); }
+  .registre-form label:nth-of-type(2), .registre-form label:nth-of-type(5) { grid-column: 1 / -1; }
+  .rg-item { flex-direction: column; padding: var(--space-4); }
+}

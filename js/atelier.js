@@ -449,7 +449,7 @@
     var raw = h1.textContent.trim();
     var kicker = info.kicker || '';
     var title = raw;
-    var m = raw.match(/^Chapitre\s+\d+\s*:\s*(.*)$/);
+    var m = raw.match(/^(?:Chapitre|Synth)\s+\d+\s*:\s*(.*)$/);
     if (m) title = m[1];
     var head = document.createElement('header');
     head.className = 'ch-hero';
@@ -526,5 +526,146 @@
     setTimeout(function () { ScrollTrigger.refresh(); }, 400);
   }
 
-  window.Atelier = { overview: overview, deck: deck, questions: questions, chapterHero: chapterHero, rails: rails, reveals: reveals };
+  /* =================================================================
+     Registre des promesses : tenu par le lecteur, dans son navigateur
+     ================================================================= */
+
+  var REGISTRE_KEY = 'synth-hype-registre';
+  var STATUTS = ['En attente', 'Tenue', 'Repoussée', 'Non tenue', 'Abandonnée'];
+
+  function loadRegistre() {
+    try { return JSON.parse(localStorage.getItem(REGISTRE_KEY)) || []; } catch (e) { return []; }
+  }
+  function saveRegistre(list) {
+    try { localStorage.setItem(REGISTRE_KEY, JSON.stringify(list)); } catch (e) {}
+  }
+  function today() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function frDate(iso) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? m[3] + '/' + m[2] + '/' + m[1] : (iso || '—'); }
+  // Échue = échéance passée alors que la promesse est encore « en attente » : c'est le moment de relancer.
+  function isDue(p) { return p.statut === 'En attente' && p.echeance && p.echeance <= today(); }
+  function sortRegistre(list) {
+    return list.slice().sort(function (a, b) {
+      var da = isDue(a) ? 0 : 1, db = isDue(b) ? 0 : 1;
+      if (da !== db) return da - db;
+      return (a.echeance || '9999') < (b.echeance || '9999') ? -1 : (a.echeance || '9999') > (b.echeance || '9999') ? 1 : 0;
+    });
+  }
+  function csvCell(v) { v = String(v == null ? '' : v); return /[";\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+
+  function registre(root) {
+    root.querySelectorAll('.registre').forEach(function (box) {
+      var list = loadRegistre();
+      box.innerHTML =
+        '<header class="registre-head"><span class="registre-kicker">Outil Synth</span>' +
+        '<h3>Registre des promesses</h3><span class="registre-count" aria-live="polite"></span></header>' +
+        '<form class="registre-form">' +
+        '<label class="rg-wide"><span>Promesse</span><textarea name="promesse" rows="2" required placeholder="« Des robotaxis dans nos rues d\'ici un an »"></textarea></label>' +
+        '<label><span>Auteur</span><input name="auteur" required placeholder="Personne ou organisation"></label>' +
+        '<label><span>Faite le</span><input type="date" name="date"></label>' +
+        '<label><span>Échéance</span><input type="date" name="echeance"></label>' +
+        '<label><span>Source (lien)</span><input type="url" name="source" placeholder="https://"></label>' +
+        '<button type="submit" class="registre-add">Ajouter au registre</button>' +
+        '</form>' +
+        '<ul class="registre-list"></ul>' +
+        '<footer class="registre-actions"><button type="button" class="registre-csv">Exporter (CSV)</button>' +
+        '<button type="button" class="registre-clear">Vider</button></footer>' +
+        '<p class="registre-status" aria-live="polite"></p>';
+      var form = box.querySelector('.registre-form');
+      var ul = box.querySelector('.registre-list');
+      var status = box.querySelector('.registre-status');
+      form.elements.date.value = today();
+
+      function render(newId) {
+        var sorted = sortRegistre(list);
+        var due = list.filter(isDue).length;
+        box.querySelector('.registre-count').textContent = list.length + (list.length > 1 ? ' promesses' : ' promesse') +
+          (due ? ' · ' + due + ' à relancer' : '');
+        if (!sorted.length) {
+          ul.innerHTML = '<li class="registre-empty">Aucune promesse pour l\'instant. Commencez par une déclaration récente que vous avez couverte.</li>';
+          return;
+        }
+        ul.innerHTML = sorted.map(function (p) {
+          var d = isDue(p);
+          return '<li class="rg-item' + (d ? ' is-due' : '') + '" data-id="' + escapeHtml(p.id) + '" data-statut="' + escapeHtml(p.statut) + '">' +
+            '<div class="rg-main">' +
+            (d ? '<span class="rg-flag">Échéance passée : relancez</span>' : '') +
+            '<p class="rg-promesse">' + escapeHtml(p.promesse) + '</p>' +
+            '<p class="rg-meta"><b>' + escapeHtml(p.auteur) + '</b> · le ' + frDate(p.date) +
+            ' · échéance ' + frDate(p.echeance) +
+            (p.source ? ' · <a href="' + escapeHtml(p.source) + '" target="_blank" rel="noopener">source</a>' : '') + '</p>' +
+            '</div>' +
+            '<div class="rg-side"><label class="rg-statut"><span class="sr-only">Statut</span><select>' +
+            STATUTS.map(function (s) { return '<option' + (s === p.statut ? ' selected' : '') + '>' + s + '</option>'; }).join('') +
+            '</select></label><button type="button" class="rg-remove" aria-label="Supprimer cette promesse">×</button></div></li>';
+        }).join('');
+        if (animate && newId) {
+          var el = ul.querySelector('[data-id="' + newId + '"]');
+          if (el) gsap.from(el, { y: -16, opacity: 0, backgroundColor: 'rgba(0,255,224,.35)', duration: .6, ease: 'power3.out' });
+        }
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var f = form.elements;
+        var p = {
+          id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+          promesse: f.promesse.value.trim(), auteur: f.auteur.value.trim(),
+          date: f.date.value, echeance: f.echeance.value, source: f.source.value.trim(), statut: 'En attente'
+        };
+        if (!p.promesse || !p.auteur) return;
+        list.push(p);
+        saveRegistre(list);
+        form.reset();
+        f.date.value = today();
+        status.textContent = 'Promesse ajoutée.';
+        render(p.id);
+      });
+
+      ul.addEventListener('change', function (e) {
+        var li = e.target.closest('.rg-item');
+        if (!li) return;
+        list.forEach(function (p) { if (p.id === li.dataset.id) p.statut = e.target.value; });
+        saveRegistre(list);
+        render();
+      });
+
+      ul.addEventListener('click', function (e) {
+        var btn = e.target.closest('.rg-remove');
+        if (!btn) return;
+        var li = btn.closest('.rg-item');
+        var done = function () {
+          list = list.filter(function (p) { return p.id !== li.dataset.id; });
+          saveRegistre(list);
+          render();
+        };
+        if (animate) gsap.to(li, { x: 40, opacity: 0, duration: .3, ease: 'power2.in', onComplete: done }); else done();
+      });
+
+      box.querySelector('.registre-csv').addEventListener('click', function () {
+        if (!list.length) { status.textContent = 'Le registre est vide.'; return; }
+        var rows = [['Promesse', 'Auteur', 'Date', 'Échéance', 'Source', 'Statut']].concat(sortRegistre(list).map(function (p) {
+          return [p.promesse, p.auteur, p.date, p.echeance, p.source, p.statut];
+        }));
+        // Point-virgule et BOM : le fichier s'ouvre directement dans un tableur configuré en français.
+        var csv = '﻿' + rows.map(function (r) { return r.map(csvCell).join(';'); }).join('\r\n');
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+        a.download = 'registre-des-promesses-' + today() + '.csv';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+        status.textContent = 'Export CSV téléchargé.';
+      });
+
+      box.querySelector('.registre-clear').addEventListener('click', function () {
+        if (!list.length || !window.confirm('Vider le registre des promesses ?')) return;
+        list = [];
+        saveRegistre(list);
+        render();
+      });
+
+      render();
+    });
+  }
+
+  window.Atelier = { overview: overview, deck: deck, questions: questions, chapterHero: chapterHero, rails: rails, reveals: reveals, registre: registre };
 })();

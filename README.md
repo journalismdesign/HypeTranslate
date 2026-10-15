@@ -17,10 +17,12 @@ css/style.css                 habillage, construit sur les jetons du design syst
 css/synth/                    jetons copiés du design system « Synth. » (Claude Design) + @font-face
 js/markdown.js                mini-convertisseur Markdown, sans dépendance
 js/app.js                     découpage en modules, navigation, quiz en conversation, progression
-js/atelier.js                 dispositifs animés : vue d'ensemble, paquet de cartes, carnet de questions
+js/atelier.js                 dispositifs animés : vue d'ensemble, paquet de cartes, carnet de questions,
+                              registre des promesses
 js/vendor/                    GSAP 3 et Draggable (licence GSAP gratuite)
 js/synth-header.js, css/synth-header.css   header Synth (modèle Zéro Clics)
-contenu/hype-literacy.fr.md   TOUS les textes du parcours (traduction française)
+contenu/hype-literacy.fr.md   textes du parcours DW Akademie (traduction française)
+contenu/parcours-synth.fr.md  parcours Synth (5 modules originaux) et boîte à outils
 source/hype-literacy.en.md    texte original anglais, extrait automatiquement, même format
 outils/rise2md.py             extraction du cours Articulate Rise -> Markdown + médias
 assets/cours/                 images du cours original (20 fichiers)
@@ -29,13 +31,23 @@ assets/                       logos Synth., œil, motif diamant, polices (Coolve
 
 ## Modifier les textes
 
-Tout se passe dans `contenu/hype-literacy.fr.md`. La syntaxe des chapitres et des blocs
+Tout se passe dans `contenu/hype-literacy.fr.md` (traduction) et `contenu/parcours-synth.fr.md`
+(contenu original de Synth). Un commentaire `<!-- groupe: … -->` range les modules qui le suivent
+dans une rubrique du sommaire ; chaque rubrique a sa propre numérotation. La syntaxe des chapitres et des blocs
 (vue d'ensemble, images, galeries, carrousel, vidéos, encadrés, citations, cartes,
 accordéon, tri, paquet de cartes, questions à se poser, quiz, image annotée, tableaux) est décrite en tête du fichier.
 
 Les quiz de fin de chapitre et la « Boîte à outils Synth » (hype-o-mètre, check-list) sont
 des ajouts de Synth, signalés comme tels dans le parcours : ils ne figurent ni dans le
 cours en ligne ni dans son export PDF.
+
+## Parcours Synth
+
+Cinq modules originaux complètent le cours de la DW Akademie, à partir des travaux de Hype Studies :
+la critique qui nourrit le hype (« criti-hype »), le hype profond et les fictions sociotechniques,
+le hype à la française, le hype dans les rédactions, enquêter sur le hype. Le dernier module
+propose un registre des promesses, conservé dans le navigateur du lecteur et exportable en CSV.
+Ce contenu, propre à Synth, ne dépend pas de la licence de la DW Akademie.
 
 ## Mettre à jour depuis le cours original
 
