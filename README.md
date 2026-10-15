@@ -1,4 +1,4 @@
-# Littératie du hype — version Synth
+# Littératie de la hype, version Synth
 
 Traduction française, aux couleurs de Synth, du cours en ligne
 [*The Hype Literacy Toolkit for Journalists*](https://akademie.dw.de/hype-literacy/)
@@ -44,8 +44,8 @@ cours en ligne ni dans son export PDF.
 ## Parcours Synth
 
 Cinq modules originaux complètent le cours de la DW Akademie, à partir des travaux de Hype Studies :
-la critique qui nourrit le hype (« criti-hype »), le hype profond et les fictions sociotechniques,
-le hype à la française, le hype dans les rédactions, enquêter sur le hype. Le dernier module
+la critique qui nourrit la hype (« criti-hype »), la hype profonde et les fictions sociotechniques,
+la hype à la française, la hype dans les rédactions, enquêter sur la hype. Le dernier module
 propose un registre des promesses, conservé dans le navigateur du lecteur et exportable en CSV.
 Ce contenu, propre à Synth, ne dépend pas de la licence de la DW Akademie.
 

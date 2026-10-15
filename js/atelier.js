@@ -318,7 +318,7 @@
   function asText() {
     var groups = {};
     carnet.forEach(function (c) { (groups[c.src || 'Questions'] = groups[c.src || 'Questions'] || []).push(c.q); });
-    return 'Mon carnet de questions — Littératie du hype\n\n' + Object.keys(groups).map(function (g) {
+    return 'Mon carnet de questions, Littératie de la hype\n\n' + Object.keys(groups).map(function (g) {
       return g + '\n' + groups[g].map(function (q) { return '☐ ' + q; }).join('\n');
     }).join('\n\n');
   }
@@ -540,7 +540,7 @@
     try { localStorage.setItem(REGISTRE_KEY, JSON.stringify(list)); } catch (e) {}
   }
   function today() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
-  function frDate(iso) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? m[3] + '/' + m[2] + '/' + m[1] : (iso || '—'); }
+  function frDate(iso) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? m[3] + '/' + m[2] + '/' + m[1] : (iso || 'non précisée'); }
   // Échue = échéance passée alors que la promesse est encore « en attente » : c'est le moment de relancer.
   function isDue(p) { return p.statut === 'En attente' && p.echeance && p.echeance <= today(); }
   function sortRegistre(list) {

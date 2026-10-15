@@ -1,5 +1,5 @@
 /*
- * Littératie du hype — application.
+ * Littératie de la hype — application.
  * Charge contenu/hype-literacy.fr.md, le découpe en modules et gère
  * navigation, exercices interactifs et progression (stockée localement).
  */
@@ -244,7 +244,7 @@
         '<button type="button" class="video-play">' +
         '<span class="video-icon" aria-hidden="true">▶</span>' +
         '<span class="video-title">' + md.inline(f.titre || 'Vidéo') + '</span>' +
-        '<span class="video-hint">Lire la vidéo — chargement depuis YouTube</span>' +
+        '<span class="video-hint">Lire la vidéo (chargement depuis YouTube)</span>' +
         '</button>' +
         (f.source ? '<figcaption><a href="' + md.escape(f.source) + '" target="_blank" rel="noopener">Voir sur YouTube</a></figcaption>' : '') +
         '</figure>';
@@ -635,7 +635,7 @@
         var all = score === questions.length;
         recordQuiz(moduleId, score, questions.length);
         bubble('bot', '<strong>Score : ' + score + ' / ' + questions.length + '.</strong> ' +
-          (all ? 'Sans faute. Le hype ne vous aura pas.' : 'Relisez le chapitre pour les points manqués, puis retentez votre chance.'));
+          (all ? 'Sans faute. La hype ne vous aura pas.' : 'Relisez le chapitre pour les points manqués, puis retentez votre chance.'));
         chips([{ html: 'Recommencer', primary: true }], function () {
           log.innerHTML = '<p class="chat-system">Aujourd\u2019hui</p>';
           score = 0;
@@ -797,11 +797,11 @@
       Atelier.chapterHero(article, {
         chapter: info ? info.n : 0,
         total: info ? info.total : 0,
-        kicker: info ? info.kicker : (mod.group || 'Littératie du hype')
+        kicker: info ? info.kicker : (mod.group || 'Littératie de la hype')
       });
       Atelier.rails(main, [
         info ? info.label + ' ' + pad2(info.n) + ' / ' + pad2(info.total) : mod.title,
-        mod.group || 'Littératie du hype',
+        mod.group || 'Littératie de la hype',
         mod.title,
         'Synth.'
       ]);
@@ -810,7 +810,7 @@
     if (window.Atelier) Atelier.reveals(main.querySelector('.module'));
     renderToc(mod.id);
     renderProgress();
-    document.title = (mod.id === 'accueil' ? '' : mod.title + ' — ') + 'Littératie du hype — Synth';
+    document.title = (mod.id === 'accueil' ? '' : mod.title + ' · ') + 'Littératie de la hype · Synth';
 
     // Un module est « lu » quand on atteint sa fin.
     if (endObserver) endObserver.disconnect();
